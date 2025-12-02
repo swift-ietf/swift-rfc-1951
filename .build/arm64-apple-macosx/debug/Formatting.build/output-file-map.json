@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/Formatting/Formatting.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Formatting.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Formatting.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Formatting~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Formatting.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Formatting.dia"
+  }
+}

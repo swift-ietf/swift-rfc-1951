@@ -1,0 +1,64 @@
+{
+  "object" : {
+    "artifacts" : [
+
+    ],
+    "dependencies" : [
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-memory-allocation",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/coenttb/swift-memory-allocation",
+          "name" : "swift-memory-allocation"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "0efbfb98b4a9dbc958e7c45b4f5a5cfa29cdbcb8",
+            "version" : "0.1.0"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "swift-memory-allocation"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-standards",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/swift-standards/swift-standards",
+          "name" : "swift-standards"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "5cbb0c991ae92825fad7f852f7a846317eb3bb17",
+            "version" : "0.8.0"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "swift-standards"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-testing-performance",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/coenttb/swift-testing-performance",
+          "name" : "swift-testing-performance"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "534ff0c25e9980c948f0599fa536750bf8f30dcc",
+            "version" : "0.1.2"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "swift-testing-performance"
+      }
+    ],
+    "prebuilts" : [
+
+    ]
+  },
+  "version" : 7
+}

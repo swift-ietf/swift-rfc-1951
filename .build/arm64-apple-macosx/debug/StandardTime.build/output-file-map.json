@@ -1,0 +1,173 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Duration.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Duration.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Duration.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Duration~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Duration.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Duration.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Instant.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Instant.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Instant.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Instant~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Instant.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Instant.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.Attosecond.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Attosecond.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Attosecond.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Attosecond~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Attosecond.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Attosecond.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.Calendar.Gregorian.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Calendar.Gregorian.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Calendar.Gregorian.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Calendar.Gregorian~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Calendar.Gregorian.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Calendar.Gregorian.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.Calendar.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Calendar.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Calendar.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Calendar~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Calendar.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Calendar.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.Epoch.Conversion.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Epoch.Conversion.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Epoch.Conversion.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Epoch.Conversion~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Epoch.Conversion.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Epoch.Conversion.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.Epoch.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Epoch.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Epoch.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Epoch~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Epoch.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Epoch.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.Femtosecond.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Femtosecond.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Femtosecond.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Femtosecond~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Femtosecond.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Femtosecond.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.Hour.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Hour.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Hour.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Hour~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Hour.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Hour.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.Microsecond.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Microsecond.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Microsecond.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Microsecond~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Microsecond.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Microsecond.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.Millisecond.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Millisecond.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Millisecond.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Millisecond~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Millisecond.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Millisecond.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.Minute.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Minute.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Minute.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Minute~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Minute.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Minute.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.Month.Day.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Month.Day.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Month.Day.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Month.Day~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Month.Day.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Month.Day.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.Month.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Month.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Month.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Month~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Month.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Month.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.Nanosecond.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Nanosecond.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Nanosecond.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Nanosecond~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Nanosecond.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Nanosecond.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.Picosecond.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Picosecond.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Picosecond.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Picosecond~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Picosecond.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Picosecond.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.Second.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Second.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Second.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Second~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Second.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Second.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.TimezoneOffset.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.TimezoneOffset.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.TimezoneOffset.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.TimezoneOffset~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.TimezoneOffset.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.TimezoneOffset.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.Week.Day.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Week.Day.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Week.Day.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Week.Day~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Week.Day.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Week.Day.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.Week.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Week.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Week.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Week~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Week.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Week.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.Year.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Year.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Year.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Year~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Year.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Year.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.Yoctosecond.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Yoctosecond.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Yoctosecond.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Yoctosecond~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Yoctosecond.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Yoctosecond.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.Zeptosecond.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Zeptosecond.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Zeptosecond.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Zeptosecond~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Zeptosecond.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.Zeptosecond.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardTime/Time.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardTime.build/Time.dia"
+  }
+}

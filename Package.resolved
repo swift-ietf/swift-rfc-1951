@@ -1,0 +1,33 @@
+{
+  "originHash" : "b89e6d292e6efaec4c7ab7d3442c9b433dd489fb3742b695a593a10f8e4d235c",
+  "pins" : [
+    {
+      "identity" : "swift-memory-allocation",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/coenttb/swift-memory-allocation",
+      "state" : {
+        "revision" : "0efbfb98b4a9dbc958e7c45b4f5a5cfa29cdbcb8",
+        "version" : "0.1.0"
+      }
+    },
+    {
+      "identity" : "swift-standards",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swift-standards/swift-standards",
+      "state" : {
+        "revision" : "5cbb0c991ae92825fad7f852f7a846317eb3bb17",
+        "version" : "0.8.0"
+      }
+    },
+    {
+      "identity" : "swift-testing-performance",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/coenttb/swift-testing-performance",
+      "state" : {
+        "revision" : "534ff0c25e9980c948f0599fa536750bf8f30dcc",
+        "version" : "0.1.2"
+      }
+    }
+  ],
+  "version" : 3
+}

@@ -1,0 +1,4 @@
+module CAllocationTracking {
+    umbrella "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-memory-allocation/Sources/CAllocationTracking/include"
+    export *
+}

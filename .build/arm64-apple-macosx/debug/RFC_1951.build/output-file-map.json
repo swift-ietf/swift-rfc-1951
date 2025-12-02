@@ -1,0 +1,82 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/Sources/RFC 1951/RFC_1951.BitReader.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.BitReader.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.BitReader.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.BitReader~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.BitReader.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.BitReader.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/Sources/RFC 1951/RFC_1951.BitWriter.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.BitWriter.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.BitWriter.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.BitWriter~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.BitWriter.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.BitWriter.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/Sources/RFC 1951/RFC_1951.Block.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Block.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Block.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Block~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Block.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Block.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/Sources/RFC 1951/RFC_1951.Compress.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Compress.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Compress.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Compress~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Compress.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Compress.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/Sources/RFC 1951/RFC_1951.Decompress.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Decompress.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Decompress.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Decompress~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Decompress.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Decompress.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/Sources/RFC 1951/RFC_1951.Error.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Error.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Error.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/Sources/RFC 1951/RFC_1951.Huffman.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Huffman.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Huffman.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Huffman~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Huffman.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Huffman.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/Sources/RFC 1951/RFC_1951.LZ77.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.LZ77.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.LZ77.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.LZ77~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.LZ77.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.LZ77.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/Sources/RFC 1951/RFC_1951.Level.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Level.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Level.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Level~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Level.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.Level.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/Sources/RFC 1951/RFC_1951.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/RFC_1951.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/Sources/RFC 1951/exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/exports.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/RFC_1951.build/exports.dia"
+  }
+}
