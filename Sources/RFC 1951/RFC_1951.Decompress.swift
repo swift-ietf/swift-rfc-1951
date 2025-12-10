@@ -18,13 +18,7 @@ extension RFC_1951 {
     public static func decompress<Input, Output>(
         _ input: Input,
         into output: inout Output
-    ) throws(Error)
-    where
-        Input: Collection,
-        Input.Element == UInt8,
-        Output: RangeReplaceableCollection,
-        Output.Element == UInt8
-    {
+    ) throws(Error) where Input: Collection, Input.Element == UInt8, Output: RangeReplaceableCollection, Output.Element == UInt8 {
         guard !input.isEmpty else {
             throw .empty
         }
@@ -73,13 +67,7 @@ extension RFC_1951 {
     public static func decompressRaw<Input, Output>(
         _ input: Input,
         into output: inout Output
-    ) throws(Error)
-    where
-        Input: Collection,
-        Input.Element == UInt8,
-        Output: RangeReplaceableCollection,
-        Output.Element == UInt8
-    {
+    ) throws(Error) where Input: Collection, Input.Element == UInt8, Output: RangeReplaceableCollection, Output.Element == UInt8 {
         // Raw DEFLATE is the same as decompress - ZLIB unwrapping is done by RFC 1950
         try decompress(input, into: &output)
     }
