@@ -126,7 +126,9 @@ extension RFC_1951 {
     }
 
     /// Get distance code, extra bits value, and number of extra bits for a distance
-    private static func encodeDistanceCode(_ distance: Int) -> (code: Int, extra: Int, extraBits: Int) {
+    private static func encodeDistanceCode(
+        _ distance: Int
+    ) -> (code: Int, extra: Int, extraBits: Int) {
         for (i, base) in distanceBase.enumerated() {
             let nextBase = i + 1 < distanceBase.count ? distanceBase[i + 1] : 32769
             if distance >= base && distance < nextBase {

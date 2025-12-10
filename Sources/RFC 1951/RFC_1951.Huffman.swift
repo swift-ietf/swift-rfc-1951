@@ -18,7 +18,7 @@ extension RFC_1951 {
 
         struct FastEntry: Sendable {
             var symbol: UInt16  // Decoded symbol
-            var length: UInt8   // Code length (0 = need tree lookup)
+            var length: UInt8  // Code length (0 = need tree lookup)
         }
 
         struct TreeNode: Sendable {
@@ -53,7 +53,10 @@ extension RFC_1951 {
             }
 
             // Build fast lookup table
-            fastLookup = [FastEntry](repeating: FastEntry(symbol: 0, length: 0), count: 1 << Self.fastBits)
+            fastLookup = [FastEntry](
+                repeating: FastEntry(symbol: 0, length: 0),
+                count: 1 << Self.fastBits
+            )
             tree = []
 
             for (symbol, code, length) in codes {
@@ -102,7 +105,9 @@ extension RFC_1951 {
         }
 
         /// Decode a symbol from the bit stream
-        mutating func decode<Bytes: Collection>(from reader: inout BitReader<Bytes>) throws(Error) -> Int {
+        mutating func decode<Bytes: Collection>(
+            from reader: inout BitReader<Bytes>
+        ) throws(Error) -> Int {
             // Try fast lookup first
             var bits: UInt32 = 0
             var bitsRead = 0
@@ -192,23 +197,23 @@ extension RFC_1951 {
     /// Length code base values and extra bits
     /// Code 257-285 map to lengths 3-258
     static let lengthBase: [Int] = [
-        3, 4, 5, 6, 7, 8, 9, 10,        // 257-264
-        11, 13, 15, 17,                 // 265-268
-        19, 23, 27, 31,                 // 269-272
-        35, 43, 51, 59,                 // 273-276
-        67, 83, 99, 115,                // 277-280
-        131, 163, 195, 227,             // 281-284
-        258                             // 285
+        3, 4, 5, 6, 7, 8, 9, 10,  // 257-264
+        11, 13, 15, 17,  // 265-268
+        19, 23, 27, 31,  // 269-272
+        35, 43, 51, 59,  // 273-276
+        67, 83, 99, 115,  // 277-280
+        131, 163, 195, 227,  // 281-284
+        258,  // 285
     ]
 
     static let lengthExtraBits: [Int] = [
-        0, 0, 0, 0, 0, 0, 0, 0,         // 257-264
-        1, 1, 1, 1,                     // 265-268
-        2, 2, 2, 2,                     // 269-272
-        3, 3, 3, 3,                     // 273-276
-        4, 4, 4, 4,                     // 277-280
-        5, 5, 5, 5,                     // 281-284
-        0                               // 285
+        0, 0, 0, 0, 0, 0, 0, 0,  // 257-264
+        1, 1, 1, 1,  // 265-268
+        2, 2, 2, 2,  // 269-272
+        3, 3, 3, 3,  // 273-276
+        4, 4, 4, 4,  // 277-280
+        5, 5, 5, 5,  // 281-284
+        0,  // 285
     ]
 
     /// Distance code base values and extra bits
@@ -217,14 +222,14 @@ extension RFC_1951 {
         1, 2, 3, 4, 5, 7, 9, 13,
         17, 25, 33, 49, 65, 97, 129, 193,
         257, 385, 513, 769, 1025, 1537, 2049, 3073,
-        4097, 6145, 8193, 12289, 16385, 24577
+        4097, 6145, 8193, 12289, 16385, 24577,
     ]
 
     static let distanceExtraBits: [Int] = [
         0, 0, 0, 0, 1, 1, 2, 2,
         3, 3, 4, 4, 5, 5, 6, 6,
         7, 7, 8, 8, 9, 9, 10, 10,
-        11, 11, 12, 12, 13, 13
+        11, 11, 12, 12, 13, 13,
     ]
 
     /// Decode a length value from a length code (257-285)
@@ -268,7 +273,7 @@ extension RFC_1951 {
 extension RFC_1951 {
     /// Order of code length codes (RFC 1951 Section 3.2.7)
     static let codeLengthOrder: [Int] = [
-        16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15
+        16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15,
     ]
 
     /// Read dynamic Huffman trees from the bit stream
@@ -276,9 +281,9 @@ extension RFC_1951 {
         from reader: inout BitReader<Bytes>
     ) throws(Error) -> (literalLength: HuffmanTree, distance: HuffmanTree) {
         // Read header
-        let hlit = Int(try reader.readBits(5)) + 257   // # of literal/length codes
-        let hdist = Int(try reader.readBits(5)) + 1    // # of distance codes
-        let hclen = Int(try reader.readBits(4)) + 4    // # of code length codes
+        let hlit = Int(try reader.readBits(5)) + 257  // # of literal/length codes
+        let hdist = Int(try reader.readBits(5)) + 1  // # of distance codes
+        let hclen = Int(try reader.readBits(4)) + 4  // # of code length codes
 
         // Read code length code lengths
         var codeLengthLengths = [Int](repeating: 0, count: 19)

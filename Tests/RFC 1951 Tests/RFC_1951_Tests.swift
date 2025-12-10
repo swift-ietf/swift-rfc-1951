@@ -1,6 +1,7 @@
 // RFC_1951_Tests.swift
 
 import Testing
+
 @testable import RFC_1951
 
 @Suite("RFC 1951 - DEFLATE Compression")
@@ -14,7 +15,7 @@ struct RFC1951Tests {
         let compressed = RFC_1951.compress(input)
 
         // Empty input still produces a valid DEFLATE stream (empty stored block)
-        #expect(compressed.count > 0)
+        #expect(!compressed.isEmpty)
 
         // But decompression fails because our implementation requires non-empty input
         // This is actually per spec - empty DEFLATE streams are edge cases
@@ -62,12 +63,15 @@ struct RFC1951Tests {
 
     // MARK: - Compression Level Tests
 
-    @Test("No compression level produces valid output", arguments: [
-        RFC_1951.Level.none,
-        RFC_1951.Level.fast,
-        RFC_1951.Level.balanced,
-        RFC_1951.Level.best,
-    ])
+    @Test(
+        "No compression level produces valid output",
+        arguments: [
+            RFC_1951.Level.none,
+            RFC_1951.Level.fast,
+            RFC_1951.Level.balanced,
+            RFC_1951.Level.best,
+        ]
+    )
     func compressionLevels(level: RFC_1951.Level) throws {
         let input = Array("The quick brown fox jumps over the lazy dog.".utf8)
         let compressed = RFC_1951.compress(input, level: level)
@@ -99,12 +103,15 @@ struct RFC1951Tests {
     func textDataCompression() throws {
         // Need longer text for DEFLATE to show compression benefit
         // Short text has overhead from block headers
-        let text = String(repeating: """
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+        let text = String(
+            repeating: """
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
 
-        """, count: 10)
+                """,
+            count: 10
+        )
         let input = Array(text.utf8)
         let compressed = RFC_1951.compress(input)
 

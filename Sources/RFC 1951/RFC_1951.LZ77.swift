@@ -26,9 +26,8 @@ extension RFC_1951 {
         /// Compute hash for 3 bytes at position
         private func hash(of bytes: [UInt8], at position: Int) -> Int {
             guard position + 2 < bytes.count else { return 0 }
-            return Int(bytes[position]) |
-                   (Int(bytes[position + 1]) << 8) |
-                   (Int(bytes[position + 2]) << 16)
+            return Int(bytes[position]) | (Int(bytes[position + 1]) << 8)
+                | (Int(bytes[position + 2]) << 16)
         }
 
         /// Find the longest match at the current position
@@ -55,9 +54,9 @@ extension RFC_1951 {
 
                     // Count matching bytes
                     var length = 0
-                    while position + length < bytes.count &&
-                          length < Self.maxLength &&
-                          bytes[candidatePos + length] == bytes[position + length] {
+                    while position + length < bytes.count && length < Self.maxLength
+                        && bytes[candidatePos + length] == bytes[position + length]
+                    {
                         length += 1
                     }
 
@@ -133,7 +132,8 @@ extension RFC_1951 {
         }
 
         while position < input.count {
-            if let match = lz77.findMatch(in: input, at: position, maxLazyMatch: lazyMatchThreshold) {
+            if let match = lz77.findMatch(in: input, at: position, maxLazyMatch: lazyMatchThreshold)
+            {
                 tokens.append(.reference(length: match.length, distance: match.distance))
 
                 // Update hash for all positions in the match
