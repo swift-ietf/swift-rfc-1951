@@ -19,13 +19,7 @@ extension RFC_1951 {
         _ input: Input,
         into output: inout Output,
         level: Level = .balanced
-    )
-    where
-        Input: Collection,
-        Input.Element == UInt8,
-        Output: RangeReplaceableCollection,
-        Output.Element == UInt8
-    {
+    ) where Input: Collection, Input.Element == UInt8, Output: RangeReplaceableCollection, Output.Element == UInt8 {
         let inputArray = Array(input)
 
         if inputArray.isEmpty {
@@ -165,13 +159,7 @@ extension RFC_1951 {
         _ input: Input,
         into output: inout Output,
         level: Level = .balanced
-    )
-    where
-        Input: Collection,
-        Input.Element == UInt8,
-        Output: RangeReplaceableCollection,
-        Output.Element == UInt8
-    {
+    ) where Input: Collection, Input.Element == UInt8, Output: RangeReplaceableCollection, Output.Element == UInt8 {
         // Raw DEFLATE is the same as compress - ZLIB wrapper is added by RFC 1950
         compress(input, into: &output, level: level)
     }

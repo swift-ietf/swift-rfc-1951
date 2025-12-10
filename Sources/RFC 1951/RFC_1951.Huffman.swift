@@ -312,20 +312,20 @@ extension RFC_1951 {
                 guard let last = allLengths.last else {
                     throw .invalidLiteralLengthTree
                 }
-                let repeat_count = Int(try reader.readBits(2)) + 3
-                for _ in 0..<repeat_count {
+                let repeatCount = Int(try reader.readBits(2)) + 3
+                for _ in 0..<repeatCount {
                     allLengths.append(last)
                 }
             } else if symbol == 17 {
                 // Repeat 0 length 3-10 times
-                let repeat_count = Int(try reader.readBits(3)) + 3
-                for _ in 0..<repeat_count {
+                let repeatCount = Int(try reader.readBits(3)) + 3
+                for _ in 0..<repeatCount {
                     allLengths.append(0)
                 }
             } else if symbol == 18 {
                 // Repeat 0 length 11-138 times
-                let repeat_count = Int(try reader.readBits(7)) + 11
-                for _ in 0..<repeat_count {
+                let repeatCount = Int(try reader.readBits(7)) + 11
+                for _ in 0..<repeatCount {
                     allLengths.append(0)
                 }
             }
