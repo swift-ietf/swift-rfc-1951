@@ -24,6 +24,23 @@
       {
         "basedOn" : null,
         "packageRef" : {
+          "identity" : "swift-numerics",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/apple/swift-numerics",
+          "name" : "swift-numerics"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "0c0290ff6b24942dadb83a929ffaaa1481df04a2",
+            "version" : "1.1.1"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "swift-numerics"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
           "identity" : "swift-standards",
           "kind" : "remoteSourceControl",
           "location" : "https://github.com/swift-standards/swift-standards",
@@ -31,8 +48,8 @@
         },
         "state" : {
           "checkoutState" : {
-            "revision" : "5cbb0c991ae92825fad7f852f7a846317eb3bb17",
-            "version" : "0.8.0"
+            "revision" : "ccbf4e4c18f793bc858950d275624c1ef2a981a5",
+            "version" : "0.10.0"
           },
           "name" : "sourceControlCheckout"
         },

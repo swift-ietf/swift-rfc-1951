@@ -2,6 +2,20 @@
   "": {
     "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardsTestSupport.build/master.swiftdeps"
   },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardsTestSupport/Bool+CaseIterable.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardsTestSupport.build/Bool+CaseIterable.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardsTestSupport.build/Bool+CaseIterable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardsTestSupport.build/Bool+CaseIterable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardsTestSupport.build/Bool+CaseIterable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardsTestSupport.build/Bool+CaseIterable.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardsTestSupport/BoolOptional+CaseIterable.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardsTestSupport.build/BoolOptional+CaseIterable.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardsTestSupport.build/BoolOptional+CaseIterable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardsTestSupport.build/BoolOptional+CaseIterable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardsTestSupport.build/BoolOptional+CaseIterable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardsTestSupport.build/BoolOptional+CaseIterable.dia"
+  },
   "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/StandardsTestSupport/StandardsTestSupport.swift": {
     "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardsTestSupport.build/StandardsTestSupport.d",
     "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/StandardsTestSupport.build/StandardsTestSupport.swift.o",

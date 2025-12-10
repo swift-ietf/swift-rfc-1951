@@ -16,7 +16,7 @@ let package = Package(
         .library(name: "RFC 1951", targets: ["RFC 1951"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-standards/swift-standards", from: "0.1.0"),
+        .package(url: "https://github.com/swift-standards/swift-standards", from: "0.10.0"),
     ],
     targets: [
         .target(

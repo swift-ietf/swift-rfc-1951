@@ -2,6 +2,48 @@
   "": {
     "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/master.swiftdeps"
   },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/Formatting/Format.BinaryInteger.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.BinaryInteger.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.BinaryInteger.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.BinaryInteger~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.BinaryInteger.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.BinaryInteger.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/Formatting/Format.FloatingPoint.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.FloatingPoint.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.FloatingPoint.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.FloatingPoint~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.FloatingPoint.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.FloatingPoint.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/Formatting/Format.Numeric.DecimalSeparatorStrategy.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.Numeric.DecimalSeparatorStrategy.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.Numeric.DecimalSeparatorStrategy.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.Numeric.DecimalSeparatorStrategy~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.Numeric.DecimalSeparatorStrategy.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.Numeric.DecimalSeparatorStrategy.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/Formatting/Format.Numeric.Notation.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.Numeric.Notation.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.Numeric.Notation.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.Numeric.Notation~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.Numeric.Notation.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.Numeric.Notation.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/Formatting/Format.Numeric.SignDisplayStrategy.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.Numeric.SignDisplayStrategy.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.Numeric.SignDisplayStrategy.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.Numeric.SignDisplayStrategy~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.Numeric.SignDisplayStrategy.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.Numeric.SignDisplayStrategy.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/Formatting/Format.Numeric.swift": {
+    "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.Numeric.d",
+    "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.Numeric.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.Numeric~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.Numeric.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Format.Numeric.dia"
+  },
   "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/checkouts/swift-standards/Sources/Formatting/Formatting.swift": {
     "dependencies": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Formatting.d",
     "object": "/Users/coen/Developer/swift-standards/swift-rfc-1951/.build/arm64-apple-macosx/debug/Formatting.build/Formatting.swift.o",
