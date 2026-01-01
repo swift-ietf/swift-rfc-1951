@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/coenttb/swift-memory-allocation",
       "state" : {
-        "revision" : "0efbfb98b4a9dbc958e7c45b4f5a5cfa29cdbcb8",
-        "version" : "0.1.0"
+        "revision" : "afe7e86f16981007b841470d5ea79f0026868bc3",
+        "version" : "0.2.0"
       }
     },
     {
@@ -24,8 +24,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swift-standards/swift-standards",
       "state" : {
-        "revision" : "ccbf4e4c18f793bc858950d275624c1ef2a981a5",
-        "version" : "0.10.0"
+        "revision" : "183ed8383f6f91243c0ac90274de70951f86b9d4",
+        "version" : "0.24.1"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-syntax",
+      "state" : {
+        "revision" : "4799286537280063c85a32f09884cfbca301b1a1",
+        "version" : "602.0.0"
       }
     },
     {
@@ -33,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/coenttb/swift-testing-performance",
       "state" : {
-        "revision" : "534ff0c25e9980c948f0599fa536750bf8f30dcc",
-        "version" : "0.1.2"
+        "revision" : "1a1967f7acfcb081e57122db463817c142cc7186",
+        "version" : "0.3.1"
       }
     }
   ],
