@@ -10,25 +10,21 @@ let package = Package(
         .iOS(.v26),
         .tvOS(.v26),
         .watchOS(.v26),
-        .visionOS(.v26),
+        .visionOS(.v26)
     ],
     products: [
-        .library(name: "RFC 1951", targets: ["RFC 1951"]),
+        .library(name: "RFC 1951", targets: ["RFC 1951"])
     ],
     dependencies: [
-        .package(path: "../../swift-primitives/swift-standard-library-extensions"),
+        .package(path: "../../swift-primitives/swift-standard-library-extensions")
     ],
     targets: [
         .target(
             name: "RFC 1951",
             dependencies: [
-                .product(name: "Standard Library Extensions", package: "swift-standard-library-extensions"),
+                .product(name: "Standard Library Extensions", package: "swift-standard-library-extensions")
             ]
-        ),
-        .testTarget(
-            name: "RFC 1951".tests,
-            dependencies: ["RFC 1951"]
-        ),
+        )
     ],
     swiftLanguageModes: [.v6]
 )
@@ -41,6 +37,6 @@ for target in package.targets where ![.system, .binary, .plugin].contains(target
     target.swiftSettings = (target.swiftSettings ?? []) + [
         .enableUpcomingFeature("ExistentialAny"),
         .enableUpcomingFeature("InternalImportsByDefault"),
-        .enableUpcomingFeature("MemberImportVisibility"),
+        .enableUpcomingFeature("MemberImportVisibility")
     ]
 }
