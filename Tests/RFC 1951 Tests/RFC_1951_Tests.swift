@@ -9,8 +9,8 @@ struct RFC1951Tests {
 
     // MARK: - Round-trip Tests
 
-    @Test("Empty data round-trip")
-    func emptyDataRoundTrip() throws {
+    @Test
+    func `Empty data round-trip`() throws {
         let input: [UInt8] = []
         let compressed = RFC_1951.compress(input)
 
@@ -21,24 +21,24 @@ struct RFC1951Tests {
         // This is actually per spec - empty DEFLATE streams are edge cases
     }
 
-    @Test("Single byte round-trip")
-    func singleByteRoundTrip() throws {
+    @Test
+    func `Single byte round-trip`() throws {
         let input: [UInt8] = [0x42]
         let compressed = RFC_1951.compress(input)
         let decompressed = try RFC_1951.decompress(compressed)
         #expect(decompressed == input)
     }
 
-    @Test("Short text round-trip")
-    func shortTextRoundTrip() throws {
+    @Test
+    func `Short text round-trip`() throws {
         let input = Array("Hello, World!".utf8)
         let compressed = RFC_1951.compress(input)
         let decompressed = try RFC_1951.decompress(compressed)
         #expect(decompressed == input)
     }
 
-    @Test("Highly compressible data round-trip")
-    func highlyCompressibleRoundTrip() throws {
+    @Test
+    func `Highly compressible data round-trip`() throws {
         let input = [UInt8](repeating: 0x41, count: 10000)
         let compressed = RFC_1951.compress(input)
         let decompressed = try RFC_1951.decompress(compressed)
@@ -46,8 +46,8 @@ struct RFC1951Tests {
         #expect(compressed.count < input.count, "Repetitive data should compress well")
     }
 
-    @Test("Random-ish data round-trip")
-    func randomishDataRoundTrip() throws {
+    @Test
+    func `Random-ish data round-trip`() throws {
         // Create pseudo-random data (deterministic for reproducibility)
         var input: [UInt8] = []
         var value: UInt8 = 0
@@ -79,8 +79,8 @@ struct RFC1951Tests {
         #expect(decompressed == input)
     }
 
-    @Test("No compression (stored blocks) round-trip")
-    func storedBlockRoundTrip() throws {
+    @Test
+    func `No compression (stored blocks) round-trip`() throws {
         let input = Array("This should be stored without compression.".utf8)
         let compressed = RFC_1951.compress(input, level: .none)
         let decompressed = try RFC_1951.decompress(compressed)
@@ -89,8 +89,8 @@ struct RFC1951Tests {
 
     // MARK: - Compression Ratio Tests
 
-    @Test("Repetitive data achieves good compression")
-    func repetitiveDataCompression() throws {
+    @Test
+    func `Repetitive data achieves good compression`() throws {
         let input = [UInt8](repeating: 0x41, count: 10000)
         let compressed = RFC_1951.compress(input, level: .best)
 
@@ -99,8 +99,8 @@ struct RFC1951Tests {
         #expect(ratio < 0.1, "Expected >90% compression, got \(Int((1 - ratio) * 100))%")
     }
 
-    @Test("Longer text data compresses")
-    func textDataCompression() throws {
+    @Test
+    func `Longer text data compresses`() throws {
         // Need longer text for DEFLATE to show compression benefit
         // Short text has overhead from block headers
         let text = String(
@@ -121,8 +121,8 @@ struct RFC1951Tests {
 
     // MARK: - Edge Cases
 
-    @Test("Large data round-trip")
-    func largeDataRoundTrip() throws {
+    @Test
+    func `Large data round-trip`() throws {
         // Create 100KB of data with some patterns
         var input: [UInt8] = []
         for i in 0..<100_000 {
@@ -134,8 +134,8 @@ struct RFC1951Tests {
         #expect(decompressed == input)
     }
 
-    @Test("Data with back-references at maximum distance")
-    func maxDistanceBackReference() throws {
+    @Test
+    func `Data with back-references at maximum distance`() throws {
         // Create data that will have back-references near the 32KB limit
         var input: [UInt8] = []
 
@@ -152,8 +152,8 @@ struct RFC1951Tests {
         #expect(decompressed == input)
     }
 
-    @Test("Binary data with all byte values")
-    func allByteValuesRoundTrip() throws {
+    @Test
+    func `Binary data with all byte values`() throws {
         var input: [UInt8] = []
         for byte: UInt8 in 0...255 {
             input.append(byte)
@@ -166,16 +166,16 @@ struct RFC1951Tests {
 
     // MARK: - Error Cases
 
-    @Test("Empty input throws error on decompression")
-    func emptyInputDecompressionError() {
+    @Test
+    func `Empty input throws error on decompression`() {
         let input: [UInt8] = []
         #expect(throws: RFC_1951.Error.empty) {
             _ = try RFC_1951.decompress(input)
         }
     }
 
-    @Test("Invalid block type throws error")
-    func invalidBlockTypeError() {
+    @Test
+    func `Invalid block type throws error`() {
         // Create a byte with block type 3 (reserved)
         // BFINAL=0, BTYPE=11 (binary: 110 = 6)
         let invalid: [UInt8] = [0b00000110]
@@ -186,8 +186,8 @@ struct RFC1951Tests {
 
     // MARK: - API Tests
 
-    @Test("Streaming API appends to existing buffer")
-    func streamingAPIAppendsToBuffer() throws {
+    @Test
+    func `Streaming API appends to existing buffer`() throws {
         let input = Array("Hello".utf8)
         var output: [UInt8] = [0xFF, 0xFE]  // Pre-existing data
         RFC_1951.compress(input, into: &output)
@@ -197,8 +197,8 @@ struct RFC1951Tests {
         #expect(output.count > 2)
     }
 
-    @Test("Raw DEFLATE API matches regular API")
-    func rawDeflateAPI() throws {
+    @Test
+    func `Raw DEFLATE API matches regular API`() throws {
         let input = Array("Test data".utf8)
 
         let compressed = RFC_1951.compress(input)
