@@ -1,6 +1,7 @@
 // RFC_1951.BitWriter.swift
 
 internal import Byte_Primitives
+internal import Binary_Primitives_Standard_Library_Integration
 
 extension RFC_1951 {
     /// Writes bits to a byte buffer, LSB first (per DEFLATE spec)
@@ -63,8 +64,7 @@ extension RFC_1951 {
 
         /// Write a 16-bit little-endian value (must be byte-aligned)
         mutating func writeUInt16LE(_ value: UInt16) {
-            writeByte(UInt8(value & 0xFF))
-            writeByte(UInt8(value >> 8))
+            writeBytes(value.bytes(endianness: .little))
         }
 
         /// Flush any remaining bits and return the buffer

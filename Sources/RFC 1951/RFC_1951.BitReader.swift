@@ -2,6 +2,7 @@
 
 internal import Byte_Primitives
 internal import Byte_Primitives_Standard_Library_Integration
+internal import Binary_Primitives_Standard_Library_Integration
 
 extension RFC_1951 {
     /// Reads bits from a byte stream, LSB first (per DEFLATE spec)
@@ -71,7 +72,7 @@ extension RFC_1951 {
         /// Read a 16-bit little-endian value (must be byte-aligned)
         mutating func readUInt16LE() throws(Error) -> UInt16 {
             let bytes = try readBytes(2)
-            return UInt16(bytes[0]) | (UInt16(bytes[1]) << 8)
+            return UInt16(bytes: bytes, endianness: .little)!
         }
     }
 }
