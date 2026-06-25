@@ -1,5 +1,7 @@
 // RFC_1951.Compress.swift
 
+public import Byte_Primitives
+
 extension RFC_1951 {
     /// Compress data using DEFLATE
     ///
@@ -11,15 +13,15 @@ extension RFC_1951 {
     /// ## Example
     ///
     /// ```swift
-    /// let data: [UInt8] = Array("Hello, World!".utf8)
-    /// var compressed: [UInt8] = []
+    /// let data: [Byte] = "Hello, World!".utf8.map(Byte.init)
+    /// var compressed: [Byte] = []
     /// RFC_1951.compress(data, into: &compressed)
     /// ```
     public static func compress<Input, Output>(
         _ input: Input,
         into output: inout Output,
         level: Level = .balanced
-    ) where Input: Collection, Input.Element == UInt8, Output: RangeReplaceableCollection, Output.Element == UInt8 {
+    ) where Input: Collection, Input.Element == Byte, Output: RangeReplaceableCollection, Output.Element == Byte {
         let inputArray = Array(input)
 
         if inputArray.isEmpty {
@@ -54,17 +56,17 @@ extension RFC_1951 {
     public static func compress<Bytes>(
         _ input: Bytes,
         level: Level = .balanced
-    ) -> [UInt8] where Bytes: Collection, Bytes.Element == UInt8 {
-        var output: [UInt8] = []
+    ) -> [Byte] where Bytes: Collection, Bytes.Element == Byte {
+        var output: [Byte] = []
         compress(input, into: &output, level: level)
         return output
     }
 
     /// Compress using stored blocks (no compression)
     private static func compressStored<Output: RangeReplaceableCollection>(
-        _ input: [UInt8],
+        _ input: [Byte],
         into output: inout Output
-    ) where Output.Element == UInt8 {
+    ) where Output.Element == Byte {
         var writer = BitWriter(into: output)
         var position = 0
 
@@ -84,10 +86,10 @@ extension RFC_1951 {
 
     /// Compress using LZ77 + Huffman coding
     private static func compressDeflate<Output: RangeReplaceableCollection>(
-        _ input: [UInt8],
+        _ input: [Byte],
         into output: inout Output,
         level: Level
-    ) where Output.Element == UInt8 {
+    ) where Output.Element == Byte {
         // For MVP, we use fixed Huffman codes which are simpler
         // Dynamic Huffman would give better compression for some data
 
@@ -159,7 +161,7 @@ extension RFC_1951 {
         _ input: Input,
         into output: inout Output,
         level: Level = .balanced
-    ) where Input: Collection, Input.Element == UInt8, Output: RangeReplaceableCollection, Output.Element == UInt8 {
+    ) where Input: Collection, Input.Element == Byte, Output: RangeReplaceableCollection, Output.Element == Byte {
         // Raw DEFLATE is the same as compress - ZLIB wrapper is added by RFC 1950
         compress(input, into: &output, level: level)
     }
@@ -168,7 +170,7 @@ extension RFC_1951 {
     public static func compressRaw<Bytes>(
         _ input: Bytes,
         level: Level = .balanced
-    ) -> [UInt8] where Bytes: Collection, Bytes.Element == UInt8 {
+    ) -> [Byte] where Bytes: Collection, Bytes.Element == Byte {
         compress(input, level: level)
     }
 }

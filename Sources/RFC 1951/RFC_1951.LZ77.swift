@@ -1,5 +1,8 @@
 // RFC_1951.LZ77.swift
 
+internal import Byte_Primitives
+internal import Byte_Primitives_Standard_Library_Integration
+
 extension RFC_1951 {
     /// LZ77 compression engine
     ///
@@ -24,7 +27,7 @@ extension RFC_1951 {
         }
 
         /// Compute hash for 3 bytes at position
-        private func hash(of bytes: [UInt8], at position: Int) -> Int {
+        private func hash(of bytes: [Byte], at position: Int) -> Int {
             guard position + 2 < bytes.count else { return 0 }
             return Int(bytes[position]) | (Int(bytes[position + 1]) << 8)
                 | (Int(bytes[position + 2]) << 16)
@@ -32,7 +35,7 @@ extension RFC_1951 {
 
         /// Find the longest match at the current position
         mutating func findMatch(
-            in bytes: [UInt8],
+            in bytes: [Byte],
             at position: Int,
             maxLazyMatch: Int
         ) -> (length: Int, distance: Int)? {
@@ -75,7 +78,7 @@ extension RFC_1951 {
         }
 
         /// Update hash table with current position
-        mutating func updateHash(for bytes: [UInt8], at position: Int) {
+        mutating func updateHash(for bytes: [Byte], at position: Int) {
             guard position + 2 < bytes.count else { return }
 
             let h = hash(of: bytes, at: position)
@@ -103,13 +106,13 @@ extension RFC_1951 {
     /// A token in the LZ77-encoded stream
     enum LZ77Token {
         /// A literal byte
-        case literal(UInt8)
+        case literal(Byte)
         /// A back-reference (length, distance)
         case reference(length: Int, distance: Int)
     }
 
     /// Encode input bytes to LZ77 tokens
-    static func encodeLZ77(_ input: [UInt8], level: Level) -> [LZ77Token] {
+    static func encodeLZ77(_ input: [Byte], level: Level) -> [LZ77Token] {
         if level == .none || input.isEmpty {
             return input.map { .literal($0) }
         }

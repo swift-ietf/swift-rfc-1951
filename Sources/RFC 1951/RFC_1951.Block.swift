@@ -1,5 +1,8 @@
 // RFC_1951.Block.swift
 
+internal import Byte_Primitives
+internal import Byte_Primitives_Standard_Library_Integration
+
 extension RFC_1951 {
     /// DEFLATE block types (RFC 1951 Section 3.2.3)
     enum BlockType: UInt8 {
@@ -22,10 +25,10 @@ extension RFC_1951 {
 extension RFC_1951 {
     /// Encode a stored (uncompressed) block
     static func encodeStoredBlock<Buffer: RangeReplaceableCollection>(
-        data: ArraySlice<UInt8>,
+        data: ArraySlice<Byte>,
         isFinal: Bool,
         into writer: inout BitWriter<Buffer>
-    ) where Buffer.Element == UInt8 {
+    ) where Buffer.Element == Byte {
         // Block header: BFINAL (1 bit) + BTYPE (2 bits)
         writer.writeBit(isFinal ? 1 : 0)
         writer.writeBits(0, count: 2)  // BTYPE = 00 (stored)
@@ -48,7 +51,7 @@ extension RFC_1951 {
         tokens: [LZ77Token],
         isFinal: Bool,
         into writer: inout BitWriter<Buffer>
-    ) where Buffer.Element == UInt8 {
+    ) where Buffer.Element == Byte {
         // Block header: BFINAL (1 bit) + BTYPE (2 bits)
         writer.writeBit(isFinal ? 1 : 0)
         writer.writeBits(1, count: 2)  // BTYPE = 01 (fixed Huffman)
@@ -71,7 +74,7 @@ extension RFC_1951 {
     private static func encodeFixedLiteral<Buffer: RangeReplaceableCollection>(
         _ value: Int,
         into writer: inout BitWriter<Buffer>
-    ) where Buffer.Element == UInt8 {
+    ) where Buffer.Element == Byte {
         // Fixed Huffman codes per RFC 1951 Section 3.2.6
         if value <= 143 {
             // 8-bit codes: 00110000 (48) + value
@@ -97,7 +100,7 @@ extension RFC_1951 {
         length: Int,
         distance: Int,
         into writer: inout BitWriter<Buffer>
-    ) where Buffer.Element == UInt8 {
+    ) where Buffer.Element == Byte {
         // Encode length
         let (lengthCode, lengthExtra, lengthExtraBits) = encodeLengthCode(length)
         encodeFixedLiteral(lengthCode, into: &writer)
@@ -147,7 +150,7 @@ extension RFC_1951 {
     static func decodeBlock<Bytes: Collection, Output: RangeReplaceableCollection>(
         from reader: inout BitReader<Bytes>,
         into output: inout Output
-    ) throws(Error) -> Bool where Bytes.Element == UInt8, Output.Element == UInt8 {
+    ) throws(Error) -> Bool where Bytes.Element == Byte, Output.Element == Byte {
         // Read block header
         let isFinal = try reader.readBit() == 1
         let btype = try reader.readBits(2)
@@ -187,7 +190,7 @@ extension RFC_1951 {
     private static func decodeStoredBlock<Bytes: Collection, Output: RangeReplaceableCollection>(
         from reader: inout BitReader<Bytes>,
         into output: inout Output
-    ) throws(Error) where Bytes.Element == UInt8, Output.Element == UInt8 {
+    ) throws(Error) where Bytes.Element == Byte, Output.Element == Byte {
         // Align to byte boundary
         reader.alignToByte()
 
@@ -211,13 +214,13 @@ extension RFC_1951 {
         literalTree: inout HuffmanTree,
         distanceTree: inout HuffmanTree,
         into output: inout Output
-    ) throws(Error) where Bytes.Element == UInt8, Output.Element == UInt8 {
+    ) throws(Error) where Bytes.Element == Byte, Output.Element == Byte {
         while true {
             let symbol = try literalTree.decode(from: &reader)
 
             if symbol < 256 {
                 // Literal byte
-                output.append(UInt8(symbol))
+                output.append(Byte(UInt8(symbol)))
             } else if symbol == 256 {
                 // End of block
                 break

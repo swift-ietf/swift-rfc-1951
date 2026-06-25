@@ -1,8 +1,10 @@
 // RFC_1951.BitWriter.swift
 
+internal import Byte_Primitives
+
 extension RFC_1951 {
     /// Writes bits to a byte buffer, LSB first (per DEFLATE spec)
-    struct BitWriter<Buffer: RangeReplaceableCollection> where Buffer.Element == UInt8 {
+    struct BitWriter<Buffer: RangeReplaceableCollection> where Buffer.Element == Byte {
         private var buffer: Buffer
         private var currentByte: UInt8 = 0
         private var bitPosition: Int = 0
@@ -16,7 +18,7 @@ extension RFC_1951 {
             currentByte |= (bit & 1) << bitPosition
             bitPosition += 1
             if bitPosition == 8 {
-                buffer.append(currentByte)
+                buffer.append(Byte(currentByte))
                 currentByte = 0
                 bitPosition = 0
             }
@@ -41,7 +43,7 @@ extension RFC_1951 {
         /// Align to byte boundary by padding with zeros
         mutating func alignToByte() {
             if bitPosition > 0 {
-                buffer.append(currentByte)
+                buffer.append(Byte(currentByte))
                 currentByte = 0
                 bitPosition = 0
             }
@@ -50,11 +52,11 @@ extension RFC_1951 {
         /// Write a byte directly (must be byte-aligned)
         mutating func writeByte(_ byte: UInt8) {
             alignToByte()
-            buffer.append(byte)
+            buffer.append(Byte(byte))
         }
 
         /// Write bytes directly (must be byte-aligned)
-        mutating func writeBytes<Bytes: Sequence>(_ bytes: Bytes) where Bytes.Element == UInt8 {
+        mutating func writeBytes<Bytes: Sequence>(_ bytes: Bytes) where Bytes.Element == Byte {
             alignToByte()
             buffer.append(contentsOf: bytes)
         }
@@ -75,7 +77,7 @@ extension RFC_1951 {
         var output: Buffer {
             var copy = buffer
             if bitPosition > 0 {
-                copy.append(currentByte)
+                copy.append(Byte(currentByte))
             }
             return copy
         }

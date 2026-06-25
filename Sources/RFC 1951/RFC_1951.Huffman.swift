@@ -1,5 +1,7 @@
 // RFC_1951.Huffman.swift
 
+internal import Byte_Primitives
+
 extension RFC_1951 {
     /// Huffman tree for decoding DEFLATE streams
     ///

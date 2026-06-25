@@ -1,6 +1,7 @@
 // RFC_1951_Tests.swift
 
 import Testing
+import Byte_Primitives
 
 @testable import RFC_1951
 
@@ -11,7 +12,7 @@ struct RFC1951Tests {
 
     @Test
     func `Empty data round-trip`() throws {
-        let input: [UInt8] = []
+        let input: [Byte] = []
         let compressed = RFC_1951.compress(input)
 
         // Empty input still produces a valid DEFLATE stream (empty stored block)
@@ -23,7 +24,7 @@ struct RFC1951Tests {
 
     @Test
     func `Single byte round-trip`() throws {
-        let input: [UInt8] = [0x42]
+        let input: [Byte] = [0x42]
         let compressed = RFC_1951.compress(input)
         let decompressed = try RFC_1951.decompress(compressed)
         #expect(decompressed == input)
@@ -31,7 +32,7 @@ struct RFC1951Tests {
 
     @Test
     func `Short text round-trip`() throws {
-        let input = Array("Hello, World!".utf8)
+        let input = "Hello, World!".utf8.map(Byte.init)
         let compressed = RFC_1951.compress(input)
         let decompressed = try RFC_1951.decompress(compressed)
         #expect(decompressed == input)
@@ -39,7 +40,7 @@ struct RFC1951Tests {
 
     @Test
     func `Highly compressible data round-trip`() throws {
-        let input = [UInt8](repeating: 0x41, count: 10000)
+        let input = [Byte](repeating: 0x41, count: 10000)
         let compressed = RFC_1951.compress(input)
         let decompressed = try RFC_1951.decompress(compressed)
         #expect(decompressed == input)
@@ -49,11 +50,11 @@ struct RFC1951Tests {
     @Test
     func `Random-ish data round-trip`() throws {
         // Create pseudo-random data (deterministic for reproducibility)
-        var input: [UInt8] = []
+        var input: [Byte] = []
         var value: UInt8 = 0
         for i in 0..<1000 {
             value = value &+ UInt8(i % 256) &+ 17
-            input.append(value)
+            input.append(Byte(value))
         }
 
         let compressed = RFC_1951.compress(input)
@@ -73,7 +74,7 @@ struct RFC1951Tests {
         ]
     )
     func compressionLevels(level: RFC_1951.Level) throws {
-        let input = Array("The quick brown fox jumps over the lazy dog.".utf8)
+        let input = "The quick brown fox jumps over the lazy dog.".utf8.map(Byte.init)
         let compressed = RFC_1951.compress(input, level: level)
         let decompressed = try RFC_1951.decompress(compressed)
         #expect(decompressed == input)
@@ -81,7 +82,7 @@ struct RFC1951Tests {
 
     @Test
     func `No compression (stored blocks) round-trip`() throws {
-        let input = Array("This should be stored without compression.".utf8)
+        let input = "This should be stored without compression.".utf8.map(Byte.init)
         let compressed = RFC_1951.compress(input, level: .none)
         let decompressed = try RFC_1951.decompress(compressed)
         #expect(decompressed == input)
@@ -91,7 +92,7 @@ struct RFC1951Tests {
 
     @Test
     func `Repetitive data achieves good compression`() throws {
-        let input = [UInt8](repeating: 0x41, count: 10000)
+        let input = [Byte](repeating: 0x41, count: 10000)
         let compressed = RFC_1951.compress(input, level: .best)
 
         // Should achieve at least 90% compression on highly repetitive data
@@ -112,7 +113,7 @@ struct RFC1951Tests {
                 """,
             count: 10
         )
-        let input = Array(text.utf8)
+        let input = text.utf8.map(Byte.init)
         let compressed = RFC_1951.compress(input)
 
         // Longer text with repetition should compress
@@ -124,9 +125,9 @@ struct RFC1951Tests {
     @Test
     func `Large data round-trip`() throws {
         // Create 100KB of data with some patterns
-        var input: [UInt8] = []
+        var input: [Byte] = []
         for i in 0..<100_000 {
-            input.append(UInt8(i % 256))
+            input.append(Byte(UInt8(i % 256)))
         }
 
         let compressed = RFC_1951.compress(input)
@@ -137,11 +138,11 @@ struct RFC1951Tests {
     @Test
     func `Data with back-references at maximum distance`() throws {
         // Create data that will have back-references near the 32KB limit
-        var input: [UInt8] = []
+        var input: [Byte] = []
 
         // First, add 32KB of unique-ish data
         for i in 0..<32768 {
-            input.append(UInt8((i * 7) % 256))
+            input.append(Byte(UInt8((i * 7) % 256)))
         }
 
         // Then repeat a pattern from earlier
@@ -154,9 +155,9 @@ struct RFC1951Tests {
 
     @Test
     func `Binary data with all byte values`() throws {
-        var input: [UInt8] = []
+        var input: [Byte] = []
         for byte: UInt8 in 0...255 {
-            input.append(byte)
+            input.append(Byte(byte))
         }
 
         let compressed = RFC_1951.compress(input)
@@ -168,7 +169,7 @@ struct RFC1951Tests {
 
     @Test
     func `Empty input throws error on decompression`() {
-        let input: [UInt8] = []
+        let input: [Byte] = []
         #expect(throws: RFC_1951.Error.empty) {
             _ = try RFC_1951.decompress(input)
         }
@@ -178,7 +179,7 @@ struct RFC1951Tests {
     func `Invalid block type throws error`() {
         // Create a byte with block type 3 (reserved)
         // BFINAL=0, BTYPE=11 (binary: 110 = 6)
-        let invalid: [UInt8] = [0b00000110]
+        let invalid: [Byte] = [0b00000110]
         #expect(throws: RFC_1951.Error.invalidBlockType(3)) {
             _ = try RFC_1951.decompress(invalid)
         }
@@ -188,8 +189,8 @@ struct RFC1951Tests {
 
     @Test
     func `Streaming API appends to existing buffer`() throws {
-        let input = Array("Hello".utf8)
-        var output: [UInt8] = [0xFF, 0xFE]  // Pre-existing data
+        let input = "Hello".utf8.map(Byte.init)
+        var output: [Byte] = [0xFF, 0xFE]  // Pre-existing data
         RFC_1951.compress(input, into: &output)
 
         #expect(output[0] == 0xFF)
@@ -199,7 +200,7 @@ struct RFC1951Tests {
 
     @Test
     func `Raw DEFLATE API matches regular API`() throws {
-        let input = Array("Test data".utf8)
+        let input = "Test data".utf8.map(Byte.init)
 
         let compressed = RFC_1951.compress(input)
         let compressedRaw = RFC_1951.compressRaw(input)

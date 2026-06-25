@@ -1,5 +1,7 @@
 // RFC_1951.Decompress.swift
 
+public import Byte_Primitives
+
 extension RFC_1951 {
     /// Decompress DEFLATE-compressed data
     ///
@@ -11,14 +13,14 @@ extension RFC_1951 {
     /// ## Example
     ///
     /// ```swift
-    /// var decompressed: [UInt8] = []
+    /// var decompressed: [Byte] = []
     /// try RFC_1951.decompress(compressed, into: &decompressed)
     /// let text = String(decoding: decompressed, as: UTF8.self)
     /// ```
     public static func decompress<Input, Output>(
         _ input: Input,
         into output: inout Output
-    ) throws(Error) where Input: Collection, Input.Element == UInt8, Output: RangeReplaceableCollection, Output.Element == UInt8 {
+    ) throws(Error) where Input: Collection, Input.Element == Byte, Output: RangeReplaceableCollection, Output.Element == Byte {
         guard !input.isEmpty else {
             throw .empty
         }
@@ -45,8 +47,8 @@ extension RFC_1951 {
     /// ```
     public static func decompress<Bytes>(
         _ input: Bytes
-    ) throws(Error) -> [UInt8] where Bytes: Collection, Bytes.Element == UInt8 {
-        var output: [UInt8] = []
+    ) throws(Error) -> [Byte] where Bytes: Collection, Bytes.Element == Byte {
+        var output: [Byte] = []
         try decompress(input, into: &output)
         return output
     }
@@ -67,7 +69,7 @@ extension RFC_1951 {
     public static func decompressRaw<Input, Output>(
         _ input: Input,
         into output: inout Output
-    ) throws(Error) where Input: Collection, Input.Element == UInt8, Output: RangeReplaceableCollection, Output.Element == UInt8 {
+    ) throws(Error) where Input: Collection, Input.Element == Byte, Output: RangeReplaceableCollection, Output.Element == Byte {
         // Raw DEFLATE is the same as decompress - ZLIB unwrapping is done by RFC 1950
         try decompress(input, into: &output)
     }
@@ -75,7 +77,7 @@ extension RFC_1951 {
     /// Convenience: raw decompress and return new array
     public static func decompressRaw<Bytes>(
         _ input: Bytes
-    ) throws(Error) -> [UInt8] where Bytes: Collection, Bytes.Element == UInt8 {
+    ) throws(Error) -> [Byte] where Bytes: Collection, Bytes.Element == Byte {
         try decompress(input)
     }
 }

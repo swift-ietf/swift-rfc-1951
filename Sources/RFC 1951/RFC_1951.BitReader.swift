@@ -1,8 +1,11 @@
 // RFC_1951.BitReader.swift
 
+internal import Byte_Primitives
+internal import Byte_Primitives_Standard_Library_Integration
+
 extension RFC_1951 {
     /// Reads bits from a byte stream, LSB first (per DEFLATE spec)
-    struct BitReader<Bytes: Collection> where Bytes.Element == UInt8 {
+    struct BitReader<Bytes: Collection> where Bytes.Element == Byte {
         private let bytes: Bytes
         private var index: Bytes.Index
         private var currentByte: UInt8 = 0
@@ -24,7 +27,7 @@ extension RFC_1951 {
                 guard index < bytes.endIndex else {
                     throw .unexpectedEndOfInput
                 }
-                currentByte = bytes[index]
+                currentByte = bytes[index].underlying
                 bytes.formIndex(after: &index)
                 bitsRemaining = 8
             }
@@ -51,9 +54,9 @@ extension RFC_1951 {
         }
 
         /// Read bytes directly (must be byte-aligned)
-        mutating func readBytes(_ count: Int) throws(Error) -> [UInt8] {
+        mutating func readBytes(_ count: Int) throws(Error) -> [Byte] {
             alignToByte()
-            var result: [UInt8] = []
+            var result: [Byte] = []
             result.reserveCapacity(count)
             for _ in 0..<count {
                 guard index < bytes.endIndex else {
