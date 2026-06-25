@@ -1,5 +1,7 @@
 // RFC_1951.Error.swift
 
+public import Byte_Primitives
+
 extension RFC_1951 {
     /// Errors that can occur during DEFLATE decompression
     public enum Error: Swift.Error, Sendable, Equatable {
@@ -7,7 +9,7 @@ extension RFC_1951 {
         case empty
 
         /// Invalid block type encountered (must be 0, 1, or 2)
-        case invalidBlockType(_ value: UInt8)
+        case invalidBlockType(_ value: Byte)
 
         /// Stored block length validation failed (LEN != ~NLEN)
         case invalidStoredBlockLength

@@ -156,7 +156,7 @@ extension RFC_1951 {
         let btype = try reader.readBits(2)
 
         guard let blockType = BlockType(rawValue: UInt8(btype)) else {
-            throw .invalidBlockType(UInt8(btype))
+            throw .invalidBlockType(Byte(UInt8(btype)))
         }
 
         switch blockType {
