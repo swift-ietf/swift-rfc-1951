@@ -1,9 +1,9 @@
 // RFC_1951.BitReader.swift
 
+internal import Binary_Endianness_Primitives
+internal import Binary_Primitives_Standard_Library_Integration
 internal import Byte_Primitives
 internal import Byte_Primitives_Standard_Library_Integration
-internal import Binary_Primitives_Standard_Library_Integration
-internal import Binary_Endianness_Primitives
 
 extension RFC_1951 {
     /// Reads bits from a byte stream, LSB first (per DEFLATE spec)

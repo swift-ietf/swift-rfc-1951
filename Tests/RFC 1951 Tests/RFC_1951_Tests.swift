@@ -1,7 +1,7 @@
 // RFC_1951_Tests.swift
 
-import Testing
 import Byte_Primitives
+import Testing
 
 @testable import RFC_1951
 

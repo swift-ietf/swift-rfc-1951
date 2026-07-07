@@ -1,8 +1,8 @@
 // RFC_1951.BitWriter.swift
 
-internal import Byte_Primitives
-internal import Binary_Primitives_Standard_Library_Integration
 internal import Binary_Endianness_Primitives
+internal import Binary_Primitives_Standard_Library_Integration
+internal import Byte_Primitives
 
 extension RFC_1951 {
     /// Writes bits to a byte buffer, LSB first (per DEFLATE spec)
