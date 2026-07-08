@@ -8,26 +8,11 @@ extension RFC_1951 {
     /// Per RFC 1951 Section 3.2.2, Huffman codes are packed with the first bit
     /// being the most significant bit of the code.
     struct HuffmanTree: Sendable {
-        /// Maximum code length in bits
-        private static let maxBits = 15
-
         /// Lookup table: for codes up to `fastBits` in length, direct lookup
-        private static let fastBits = 9
         private var fastLookup: [FastEntry]
 
         /// For longer codes, use tree traversal
         private var tree: [TreeNode]
-
-        struct FastEntry: Sendable {
-            var symbol: UInt16  // Decoded symbol
-            var length: UInt8  // Code length (0 = need tree lookup)
-        }
-
-        struct TreeNode: Sendable {
-            var children: (left: Int, right: Int)  // -1 = invalid, >= 0 = next node or symbol
-            var isLeaf: Bool
-            var symbol: UInt16
-        }
 
         /// Build a Huffman tree from code lengths
         ///
@@ -82,86 +67,105 @@ extension RFC_1951 {
                 insertIntoTree(symbol: symbol, code: code, length: length)
             }
         }
+    }
+}
 
-        private mutating func insertIntoTree(symbol: Int, code: Int, length: Int) {
-            // For MVP, we store codes longer than fastBits in a simple list
-            // and do linear search. This is suboptimal but correct.
-            // Real implementation would build a proper tree structure.
-            let node = TreeNode(
-                children: (code, length),  // Abuse children to store code/length
-                isLeaf: true,
-                symbol: UInt16(symbol)
-            )
-            tree.append(node)
+extension RFC_1951.HuffmanTree {
+    /// Maximum code length in bits
+    private static let maxBits = 15
+
+    /// Lookup table: for codes up to `fastBits` in length, direct lookup
+    private static let fastBits = 9
+
+    struct FastEntry: Sendable {
+        var symbol: UInt16  // Decoded symbol
+        var length: UInt8  // Code length (0 = need tree lookup)
+    }
+
+    struct TreeNode: Sendable {
+        var children: (left: Int, right: Int)  // -1 = invalid, >= 0 = next node or symbol
+        var isLeaf: Bool
+        var symbol: UInt16
+    }
+
+    private mutating func insertIntoTree(symbol: Int, code: Int, length: Int) {
+        // For MVP, we store codes longer than fastBits in a simple list
+        // and do linear search. This is suboptimal but correct.
+        // Real implementation would build a proper tree structure.
+        let node = TreeNode(
+            children: (code, length),  // Abuse children to store code/length
+            isLeaf: true,
+            symbol: UInt16(symbol)
+        )
+        tree.append(node)
+    }
+
+    /// Reverse the bits in a code (DEFLATE uses reversed bit order)
+    private static func reverseBits(_ value: Int, count: Int) -> Int {
+        var result = 0
+        var v = value
+        for _ in 0..<count {
+            result = (result << 1) | (v & 1)
+            v >>= 1
         }
+        return result
+    }
 
-        /// Reverse the bits in a code (DEFLATE uses reversed bit order)
-        private static func reverseBits(_ value: Int, count: Int) -> Int {
-            var result = 0
-            var v = value
-            for _ in 0..<count {
-                result = (result << 1) | (v & 1)
-                v >>= 1
-            }
-            return result
-        }
+    /// Decode a symbol from the bit stream
+    mutating func decode<Bytes: Collection>(
+        from reader: inout RFC_1951.BitReader<Bytes>
+    ) throws(RFC_1951.Error) -> Int {
+        // Try fast lookup first
+        var bits: UInt32 = 0
+        var bitsRead = 0
 
-        /// Decode a symbol from the bit stream
-        mutating func decode<Bytes: Collection>(
-            from reader: inout BitReader<Bytes>
-        ) throws(Error) -> Int {
-            // Try fast lookup first
-            var bits: UInt32 = 0
-            var bitsRead = 0
+        // Read up to fastBits
+        while bitsRead < Self.fastBits && reader.hasMoreBits {
+            let bit = try reader.readBit()
+            bits |= UInt32(bit) << bitsRead
+            bitsRead += 1
 
-            // Read up to fastBits
-            while bitsRead < Self.fastBits && reader.hasMoreBits {
-                let bit = try reader.readBit()
-                bits |= UInt32(bit) << bitsRead
-                bitsRead += 1
-
-                if bitsRead <= Self.fastBits {
-                    let entry = fastLookup[Int(bits)]
-                    if entry.length > 0 && entry.length <= bitsRead {
-                        // We have enough bits - but we may have read too many
-                        // Actually for LSB-first, we read exactly what we need
-                        // The fast table handles this by filling all matching patterns
-                        if entry.length == bitsRead {
-                            return Int(entry.symbol)
-                        }
-                    }
-                }
-            }
-
-            // Check fast lookup
-            if bitsRead > 0 {
-                let entry = fastLookup[Int(bits) & ((1 << Self.fastBits) - 1)]
+            if bitsRead <= Self.fastBits {
+                let entry = fastLookup[Int(bits)]
                 if entry.length > 0 && entry.length <= bitsRead {
-                    return Int(entry.symbol)
-                }
-            }
-
-            // Slow path: search tree for longer codes
-            while bitsRead < Self.maxBits && reader.hasMoreBits {
-                let bit = try reader.readBit()
-                bits |= UInt32(bit) << bitsRead
-                bitsRead += 1
-
-                // Search in tree
-                for node in tree {
-                    let nodeCode = node.children.left
-                    let nodeLen = node.children.right
-                    if nodeLen == bitsRead {
-                        let reversedBits = Self.reverseBits(Int(bits), count: bitsRead)
-                        if reversedBits == nodeCode {
-                            return Int(node.symbol)
-                        }
+                    // We have enough bits - but we may have read too many
+                    // Actually for LSB-first, we read exactly what we need
+                    // The fast table handles this by filling all matching patterns
+                    if entry.length == bitsRead {
+                        return Int(entry.symbol)
                     }
                 }
             }
-
-            throw .invalidHuffmanCode
         }
+
+        // Check fast lookup
+        if bitsRead > 0 {
+            let entry = fastLookup[Int(bits) & ((1 << Self.fastBits) - 1)]
+            if entry.length > 0 && entry.length <= bitsRead {
+                return Int(entry.symbol)
+            }
+        }
+
+        // Slow path: search tree for longer codes
+        while bitsRead < Self.maxBits && reader.hasMoreBits {
+            let bit = try reader.readBit()
+            bits |= UInt32(bit) << bitsRead
+            bitsRead += 1
+
+            // Search in tree
+            for node in tree {
+                let nodeCode = node.children.left
+                let nodeLen = node.children.right
+                if nodeLen == bitsRead {
+                    let reversedBits = Self.reverseBits(Int(bits), count: bitsRead)
+                    if reversedBits == nodeCode {
+                        return Int(node.symbol)
+                    }
+                }
+            }
+        }
+
+        throw .invalidHuffmanCode
     }
 }
 

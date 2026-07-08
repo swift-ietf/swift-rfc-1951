@@ -9,15 +9,6 @@ extension RFC_1951 {
     /// Finds repeated sequences in the input and represents them as
     /// (length, distance) pairs.
     struct LZ77 {
-        /// Maximum backward distance (32KB window)
-        static let maxDistance = 32768
-
-        /// Maximum match length
-        static let maxLength = 258
-
-        /// Minimum match length (shorter matches aren't worth encoding)
-        static let minMatch = 3
-
         /// Hash table for finding matches
         private var hashTable: [Int: [Int]]  // hash -> list of positions
         private var windowStart: Int = 0
@@ -25,78 +16,89 @@ extension RFC_1951 {
         init() {
             hashTable = [:]
         }
+    }
+}
 
-        /// Compute hash for 3 bytes at position
-        private func hash(of bytes: [Byte], at position: Int) -> Int {
-            guard position + 2 < bytes.count else { return 0 }
-            return Int(bytes[position]) | (Int(bytes[position + 1]) << 8)
-                | (Int(bytes[position + 2]) << 16)
-        }
+extension RFC_1951.LZ77 {
+    /// Maximum backward distance (32KB window)
+    static let maxDistance = 32768
 
-        /// Find the longest match at the current position
-        mutating func findMatch(
-            in bytes: [Byte],
-            at position: Int,
-            maxLazyMatch: Int
-        ) -> (length: Int, distance: Int)? {
-            guard position + Self.minMatch <= bytes.count else { return nil }
+    /// Maximum match length
+    static let maxLength = 258
 
-            let h = hash(of: bytes, at: position)
-            var bestLength = Self.minMatch - 1
-            var bestDistance = 0
+    /// Minimum match length (shorter matches aren't worth encoding)
+    static let minMatch = 3
 
-            if let candidates = hashTable[h] {
-                let minPos = max(0, position - Self.maxDistance)
+    /// Compute hash for 3 bytes at position
+    private func hash(of bytes: [Byte], at position: Int) -> Int {
+        guard position + 2 < bytes.count else { return 0 }
+        return Int(bytes[position]) | (Int(bytes[position + 1]) << 8)
+            | (Int(bytes[position + 2]) << 16)
+    }
 
-                // Search from most recent to oldest
-                for candidatePos in candidates.reversed() {
-                    guard candidatePos >= minPos else { break }
+    /// Find the longest match at the current position
+    mutating func findMatch(
+        in bytes: [Byte],
+        at position: Int,
+        maxLazyMatch: Int
+    ) -> (length: Int, distance: Int)? {
+        guard position + Self.minMatch <= bytes.count else { return nil }
 
-                    let distance = position - candidatePos
-                    guard distance > 0, distance <= Self.maxDistance else { continue }
+        let h = hash(of: bytes, at: position)
+        var bestLength = Self.minMatch - 1
+        var bestDistance = 0
 
-                    // Count matching bytes
-                    var length = 0
-                    while position + length < bytes.count && length < Self.maxLength && bytes[candidatePos + length] == bytes[position + length] {
-                        length += 1
-                    }
+        if let candidates = hashTable[h] {
+            let minPos = max(0, position - Self.maxDistance)
 
-                    if length > bestLength {
-                        bestLength = length
-                        bestDistance = distance
+            // Search from most recent to oldest
+            for candidatePos in candidates.reversed() {
+                guard candidatePos >= minPos else { break }
 
-                        // Early exit for long matches
-                        if length >= maxLazyMatch {
-                            break
-                        }
+                let distance = position - candidatePos
+                guard distance > 0, distance <= Self.maxDistance else { continue }
+
+                // Count matching bytes
+                var length = 0
+                while position + length < bytes.count && length < Self.maxLength && bytes[candidatePos + length] == bytes[position + length] {
+                    length += 1
+                }
+
+                if length > bestLength {
+                    bestLength = length
+                    bestDistance = distance
+
+                    // Early exit for long matches
+                    if length >= maxLazyMatch {
+                        break
                     }
                 }
             }
-
-            guard bestLength >= Self.minMatch else { return nil }
-            return (bestLength, bestDistance)
         }
 
-        /// Update hash table with current position
-        mutating func updateHash(for bytes: [Byte], at position: Int) {
-            guard position + 2 < bytes.count else { return }
+        guard bestLength >= Self.minMatch else { return nil }
+        return (bestLength, bestDistance)
+    }
 
-            let h = hash(of: bytes, at: position)
-            if hashTable[h] == nil {
-                hashTable[h] = []
-            }
-            hashTable[h]!.append(position)
+    /// Update hash table with current position
+    mutating func updateHash(for bytes: [Byte], at position: Int) {
+        guard position + 2 < bytes.count else { return }
 
-            // Prune old entries outside the window
-            let minPos = max(0, position - Self.maxDistance)
-            hashTable[h] = hashTable[h]!.filter { $0 >= minPos }
+        let h = hash(of: bytes, at: position)
+        if hashTable[h] == nil {
+            hashTable[h] = []
         }
+        hashTable[h]!.append(position)
 
-        /// Reset the compressor state
-        mutating func reset() {
-            hashTable.removeAll()
-            windowStart = 0
-        }
+        // Prune old entries outside the window
+        let minPos = max(0, position - Self.maxDistance)
+        hashTable[h] = hashTable[h]!.filter { $0 >= minPos }
+    }
+
+    /// Reset the compressor state
+    mutating func reset() {
+        hashTable.removeAll()
+        windowStart = 0
     }
 }
 
