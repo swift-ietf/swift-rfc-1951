@@ -65,7 +65,6 @@ struct RFC1951Tests {
     // MARK: - Compression Level Tests
 
     @Test(
-        "No compression level produces valid output",
         arguments: [
             RFC_1951.Level.none,
             RFC_1951.Level.fast,
@@ -73,7 +72,7 @@ struct RFC1951Tests {
             RFC_1951.Level.best,
         ]
     )
-    func compressionLevels(level: RFC_1951.Level) throws {
+    func `No compression level produces valid output`(level: RFC_1951.Level) throws {
         let input = "The quick brown fox jumps over the lazy dog.".utf8.map(Byte.init)
         let compressed = RFC_1951.compress(input, level: level)
         let decompressed = try RFC_1951.decompress(compressed)
