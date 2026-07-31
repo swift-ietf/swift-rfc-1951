@@ -61,6 +61,7 @@ extension RFC_1951 {
             switch token {
             case .literal(let byte):
                 encodeFixedLiteral(Int(byte), into: &writer)
+
             case .reference(let length, let distance):
                 encodeFixedLengthDistance(length: length, distance: distance, into: &writer)
             }
@@ -162,6 +163,7 @@ extension RFC_1951 {
         switch blockType {
         case .stored:
             try decodeStoredBlock(from: &reader, into: &output)
+
         case .fixedHuffman:
             var literalTree = makeFixedLiteralLengthTree()
             var distanceTree = makeFixedDistanceTree()
@@ -171,6 +173,7 @@ extension RFC_1951 {
                 distanceTree: &distanceTree,
                 into: &output
             )
+
         case .dynamicHuffman:
             var (literalTree, distanceTree) = try readDynamicTrees(from: &reader)
             try decodeHuffmanBlock(
@@ -179,6 +182,7 @@ extension RFC_1951 {
                 distanceTree: &distanceTree,
                 into: &output
             )
+
         case .reserved:
             throw .invalidBlockType(3)
         }

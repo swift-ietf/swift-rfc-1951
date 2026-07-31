@@ -134,6 +134,7 @@ extension RFC_1951 {
             switch token {
             case .literal:
                 bits += 9  // Average literal code length
+
             case .reference:
                 bits += 15  // Length code + distance code + extras
             }
