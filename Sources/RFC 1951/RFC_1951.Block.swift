@@ -120,7 +120,7 @@ extension RFC_1951 {
     /// Get length code, extra bits value, and number of extra bits for a length
     private static func encodeLengthCode(_ length: Int) -> (code: Int, extra: Int, extraBits: Int) {
         for (i, base) in lengthBase.enumerated() {
-            let nextBase = i + 1 < lengthBase.count ? lengthBase[i + 1] : 259
+            let nextBase = lengthBase.indices.contains(i + 1) ? lengthBase[i + 1] : 259
             if length >= base && length < nextBase {
                 return (257 + i, length - base, lengthExtraBits[i])
             }
@@ -134,7 +134,7 @@ extension RFC_1951 {
         _ distance: Int
     ) -> (code: Int, extra: Int, extraBits: Int) {
         for (i, base) in distanceBase.enumerated() {
-            let nextBase = i + 1 < distanceBase.count ? distanceBase[i + 1] : 32769
+            let nextBase = distanceBase.indices.contains(i + 1) ? distanceBase[i + 1] : 32769
             if distance >= base && distance < nextBase {
                 return (i, distance - base, distanceExtraBits[i])
             }
@@ -148,7 +148,7 @@ extension RFC_1951 {
 
 extension RFC_1951 {
     /// Decode a DEFLATE block
-    static func decodeBlock<Bytes: Collection, Output: RangeReplaceableCollection>(
+    static func decodeBlock<Bytes: Swift.Collection, Output: RangeReplaceableCollection>(
         from reader: inout BitReader<Bytes>,
         into output: inout Output
     ) throws(Error) -> Bool where Bytes.Element == Byte, Output.Element == Byte {
@@ -191,7 +191,7 @@ extension RFC_1951 {
     }
 
     /// Decode a stored (uncompressed) block
-    private static func decodeStoredBlock<Bytes: Collection, Output: RangeReplaceableCollection>(
+    private static func decodeStoredBlock<Bytes: Swift.Collection, Output: RangeReplaceableCollection>(
         from reader: inout BitReader<Bytes>,
         into output: inout Output
     ) throws(Error) where Bytes.Element == Byte, Output.Element == Byte {
@@ -213,7 +213,7 @@ extension RFC_1951 {
     }
 
     /// Decode a Huffman-compressed block
-    private static func decodeHuffmanBlock<Bytes: Collection, Output: RangeReplaceableCollection>(
+    private static func decodeHuffmanBlock<Bytes: Swift.Collection, Output: RangeReplaceableCollection>(
         from reader: inout BitReader<Bytes>,
         literalTree: inout HuffmanTree,
         distanceTree: inout HuffmanTree,
@@ -246,7 +246,7 @@ extension RFC_1951 {
                 }
 
                 let startPos = outputArray.count - distance
-                for i in 0..<length {
+                (0..<length).forEach { i in
                     // Handle overlapping copies (e.g., distance=1, length=10 repeats last byte)
                     let srcPos = startPos + (i % distance)
                     outputArray.append(outputArray[srcPos])

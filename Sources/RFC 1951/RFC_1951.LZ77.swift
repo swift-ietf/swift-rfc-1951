@@ -105,14 +105,6 @@ extension RFC_1951.LZ77 {
 // MARK: - LZ77 Token
 
 extension RFC_1951 {
-    /// A token in the LZ77-encoded stream
-    enum LZ77Token {
-        /// A literal byte
-        case literal(Byte)
-        /// A back-reference (length, distance)
-        case reference(length: Int, distance: Int)
-    }
-
     /// Encode input bytes to LZ77 tokens
     static func encodeLZ77(_ input: [Byte], level: Level) -> [LZ77Token] {
         if level == .none || input.isEmpty {
@@ -139,7 +131,7 @@ extension RFC_1951 {
                 tokens.append(.reference(length: match.length, distance: match.distance))
 
                 // Update hash for all positions in the match
-                for i in 0..<match.length {
+                (0..<match.length).forEach { i in
                     lz77.updateHash(for: input, at: position + i)
                 }
                 position += match.length

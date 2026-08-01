@@ -14,73 +14,75 @@ extension RFC_1951 {
         init(into buffer: Buffer) {
             self.buffer = buffer
         }
+    }
+}
 
-        /// Write a single bit
-        mutating func writeBit(_ bit: UInt8) {
-            currentByte |= (bit & 1) << bitPosition
-            bitPosition += 1
-            if bitPosition == 8 {
-                buffer.append(Byte(currentByte))
-                currentByte = 0
-                bitPosition = 0
-            }
+extension RFC_1951.BitWriter {
+    /// Write a single bit
+    mutating func writeBit(_ bit: UInt8) {
+        currentByte |= (bit & 1) << bitPosition
+        bitPosition += 1
+        if bitPosition == 8 {
+            buffer.append(Byte(currentByte))
+            currentByte = 0
+            bitPosition = 0
         }
+    }
 
-        /// Write multiple bits (LSB first)
-        mutating func writeBits(_ value: UInt32, count: Int) {
-            var v = value
-            for _ in 0..<count {
-                writeBit(UInt8(v & 1))
-                v >>= 1
-            }
+    /// Write multiple bits (LSB first)
+    mutating func writeBits(_ value: UInt32, count: Int) {
+        var v = value
+        (0..<count).forEach { _ in
+            writeBit(UInt8(v & 1))
+            v >>= 1
         }
+    }
 
-        /// Write bits in reverse order (MSB first) - for Huffman codes
-        mutating func writeBitsReversed(_ value: UInt32, count: Int) {
-            for i in stride(from: count - 1, through: 0, by: -1) {
-                writeBit(UInt8((value >> i) & 1))
-            }
+    /// Write bits in reverse order (MSB first) - for Huffman codes
+    mutating func writeBitsReversed(_ value: UInt32, count: Int) {
+        for i in stride(from: count - 1, through: 0, by: -1) {
+            writeBit(UInt8((value >> i) & 1))
         }
+    }
 
-        /// Align to byte boundary by padding with zeros
-        mutating func alignToByte() {
-            if bitPosition > 0 {
-                buffer.append(Byte(currentByte))
-                currentByte = 0
-                bitPosition = 0
-            }
+    /// Align to byte boundary by padding with zeros
+    mutating func alignToByte() {
+        if bitPosition > 0 {
+            buffer.append(Byte(currentByte))
+            currentByte = 0
+            bitPosition = 0
         }
+    }
 
-        /// Write a byte directly (must be byte-aligned)
-        mutating func writeByte(_ byte: UInt8) {
-            alignToByte()
-            buffer.append(Byte(byte))
-        }
+    /// Write a byte directly (must be byte-aligned)
+    mutating func writeByte(_ byte: UInt8) {
+        alignToByte()
+        buffer.append(Byte(byte))
+    }
 
-        /// Write bytes directly (must be byte-aligned)
-        mutating func writeBytes<Bytes: Sequence>(_ bytes: Bytes) where Bytes.Element == Byte {
-            alignToByte()
-            buffer.append(contentsOf: bytes)
-        }
+    /// Write bytes directly (must be byte-aligned)
+    mutating func writeBytes<Bytes: Swift.Sequence>(_ bytes: Bytes) where Bytes.Element == Byte {
+        alignToByte()
+        buffer.append(contentsOf: bytes)
+    }
 
-        /// Write a 16-bit little-endian value (must be byte-aligned)
-        mutating func writeUInt16LE(_ value: UInt16) {
-            writeBytes(value.bytes(endianness: .little))
-        }
+    /// Write a 16-bit little-endian value (must be byte-aligned)
+    mutating func writeUInt16LE(_ value: UInt16) {
+        writeBytes(value.bytes(endianness: .little))
+    }
 
-        /// Flush any remaining bits and return the buffer
-        mutating func finish() -> Buffer {
-            alignToByte()
-            return buffer
-        }
+    /// Flush any remaining bits and return the buffer
+    mutating func finish() -> Buffer {
+        alignToByte()
+        return buffer
+    }
 
-        /// Get current buffer content without finishing
-        var output: Buffer {
-            var copy = buffer
-            if bitPosition > 0 {
-                copy.append(Byte(currentByte))
-            }
-            return copy
+    /// Get current buffer content without finishing
+    var output: Buffer {
+        var copy = buffer
+        if bitPosition > 0 {
+            copy.append(Byte(currentByte))
         }
+        return copy
     }
 }

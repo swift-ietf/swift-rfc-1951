@@ -21,7 +21,7 @@ extension RFC_1951 {
         _ input: Input,
         into output: inout Output,
         level: Level = .balanced
-    ) where Input: Collection, Input.Element == Byte, Output: RangeReplaceableCollection, Output.Element == Byte {
+    ) where Input: Swift.Collection, Input.Element == Byte, Output: RangeReplaceableCollection, Output.Element == Byte {
         let inputArray = Array(input)
 
         if inputArray.isEmpty {
@@ -56,7 +56,7 @@ extension RFC_1951 {
     public static func compress<Bytes>(
         _ input: Bytes,
         level: Level = .balanced
-    ) -> [Byte] where Bytes: Collection, Bytes.Element == Byte {
+    ) -> [Byte] where Bytes: Swift.Collection, Bytes.Element == Byte {
         var output: [Byte] = []
         compress(input, into: &output, level: level)
         return output
@@ -162,7 +162,7 @@ extension RFC_1951 {
         _ input: Input,
         into output: inout Output,
         level: Level = .balanced
-    ) where Input: Collection, Input.Element == Byte, Output: RangeReplaceableCollection, Output.Element == Byte {
+    ) where Input: Swift.Collection, Input.Element == Byte, Output: RangeReplaceableCollection, Output.Element == Byte {
         // Raw DEFLATE is the same as compress - ZLIB wrapper is added by RFC 1950
         compress(input, into: &output, level: level)
     }
@@ -171,7 +171,7 @@ extension RFC_1951 {
     public static func compressRaw<Bytes>(
         _ input: Bytes,
         level: Level = .balanced
-    ) -> [Byte] where Bytes: Collection, Bytes.Element == Byte {
+    ) -> [Byte] where Bytes: Swift.Collection, Bytes.Element == Byte {
         compress(input, level: level)
     }
 }

@@ -27,7 +27,7 @@ extension RFC_1951 {
             // Find the numerical value of the smallest code for each code length
             var nextCode = [Int](repeating: 0, count: Self.maxBits + 1)
             var code = 0
-            for bits in 1...Self.maxBits {
+            (1...Self.maxBits).forEach { bits in
                 code = (code + blCount[bits - 1]) << 1
                 nextCode[bits] = code
             }
@@ -51,7 +51,7 @@ extension RFC_1951 {
                     // Fill all entries that match this code
                     let baseBits = Self.fastBits - length
                     let reversedCode = Self.reverseBits(code, count: length)
-                    for extra in 0..<(1 << baseBits) {
+                    (0..<(1 << baseBits)).forEach { extra in
                         let index = reversedCode | (extra << length)
                         fastLookup[index] = FastEntry(symbol: UInt16(symbol), length: UInt8(length))
                     }
@@ -77,17 +77,6 @@ extension RFC_1951.HuffmanTree {
     /// Lookup table: for codes up to `fastBits` in length, direct lookup
     private static let fastBits = 9
 
-    struct FastEntry: Sendable {
-        var symbol: UInt16  // Decoded symbol
-        var length: UInt8  // Code length (0 = need tree lookup)
-    }
-
-    struct TreeNode: Sendable {
-        var children: (left: Int, right: Int)  // -1 = invalid, >= 0 = next node or symbol
-        var isLeaf: Bool
-        var symbol: UInt16
-    }
-
     private mutating func insertIntoTree(symbol: Int, code: Int, length: Int) {
         // For MVP, we store codes longer than fastBits in a simple list
         // and do linear search. This is suboptimal but correct.
@@ -112,7 +101,7 @@ extension RFC_1951.HuffmanTree {
     }
 
     /// Decode a symbol from the bit stream
-    mutating func decode<Bytes: Collection>(
+    mutating func decode<Bytes: Swift.Collection>(
         from reader: inout RFC_1951.BitReader<Bytes>
     ) throws(RFC_1951.Error) -> Int {
         // Try fast lookup first
@@ -182,10 +171,10 @@ extension RFC_1951 {
     static func makeFixedLiteralLengthTree() -> HuffmanTree {
         var lengths = [Int](repeating: 0, count: 288)
 
-        for i in 0...143 { lengths[i] = 8 }
-        for i in 144...255 { lengths[i] = 9 }
-        for i in 256...279 { lengths[i] = 7 }
-        for i in 280...287 { lengths[i] = 8 }
+        (0...143).forEach { lengths[$0] = 8 }
+        (144...255).forEach { lengths[$0] = 9 }
+        (256...279).forEach { lengths[$0] = 7 }
+        (280...287).forEach { lengths[$0] = 8 }
 
         return HuffmanTree(lengths: lengths)!
     }
@@ -239,7 +228,7 @@ extension RFC_1951 {
     ]
 
     /// Decode a length value from a length code (257-285)
-    static func decodeLength<Bytes: Collection>(
+    static func decodeLength<Bytes: Swift.Collection>(
         code: Int,
         from reader: inout BitReader<Bytes>
     ) throws(Error) -> Int {
@@ -257,7 +246,7 @@ extension RFC_1951 {
     }
 
     /// Decode a distance value from a distance code (0-29)
-    static func decodeDistance<Bytes: Collection>(
+    static func decodeDistance<Bytes: Swift.Collection>(
         code: Int,
         from reader: inout BitReader<Bytes>
     ) throws(Error) -> Int {
@@ -283,7 +272,7 @@ extension RFC_1951 {
     ]
 
     /// Read dynamic Huffman trees from the bit stream
-    static func readDynamicTrees<Bytes: Collection>(
+    static func readDynamicTrees<Bytes: Swift.Collection>(
         from reader: inout BitReader<Bytes>
     ) throws(Error) -> (literalLength: HuffmanTree, distance: HuffmanTree) {
         // Read header
