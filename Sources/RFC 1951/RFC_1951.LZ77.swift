@@ -60,7 +60,9 @@ extension RFC_1951.LZ77 {
 
                 // Count matching bytes
                 var length = 0
-                while position + length < bytes.count && length < Self.maxLength && bytes[candidatePos + length] == bytes[position + length] {
+                while position + length < bytes.count && length < Self.maxLength
+                    && bytes[candidatePos + length] == bytes[position + length]
+                {
                     length += 1
                 }
 
@@ -127,7 +129,8 @@ extension RFC_1951 {
         }
 
         while position < input.count {
-            if let match = lz77.findMatch(in: input, at: position, maxLazyMatch: lazyMatchThreshold) {
+            if let match = lz77.findMatch(in: input, at: position, maxLazyMatch: lazyMatchThreshold)
+            {
                 tokens.append(.reference(length: match.length, distance: match.distance))
 
                 // Update hash for all positions in the match

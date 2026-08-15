@@ -191,7 +191,10 @@ extension RFC_1951 {
     }
 
     /// Decode a stored (uncompressed) block
-    private static func decodeStoredBlock<Bytes: Swift.Collection, Output: RangeReplaceableCollection>(
+    private static func decodeStoredBlock<
+        Bytes: Swift.Collection,
+        Output: RangeReplaceableCollection
+    >(
         from reader: inout BitReader<Bytes>,
         into output: inout Output
     ) throws(Error) where Bytes.Element == Byte, Output.Element == Byte {
@@ -213,7 +216,10 @@ extension RFC_1951 {
     }
 
     /// Decode a Huffman-compressed block
-    private static func decodeHuffmanBlock<Bytes: Swift.Collection, Output: RangeReplaceableCollection>(
+    private static func decodeHuffmanBlock<
+        Bytes: Swift.Collection,
+        Output: RangeReplaceableCollection
+    >(
         from reader: inout BitReader<Bytes>,
         literalTree: inout HuffmanTree,
         distanceTree: inout HuffmanTree,
