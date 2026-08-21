@@ -1,11 +1,9 @@
-// RFC_1951.BitWriter.swift
-
 internal import Binary_Endianness_Primitives
 internal import Binary_Primitives_Standard_Library_Integration
 internal import Byte_Primitives
 
 extension RFC_1951 {
-    /// Writes bits to a byte buffer, LSB first (per DEFLATE spec)
+
     struct BitWriter<Buffer: RangeReplaceableCollection> where Buffer.Element == Byte {
         private var buffer: Buffer
         private var currentByte: UInt8 = 0
@@ -18,7 +16,7 @@ extension RFC_1951 {
 }
 
 extension RFC_1951.BitWriter {
-    /// Write a single bit
+
     mutating func writeBit(_ bit: UInt8) {
         currentByte |= (bit & 1) << bitPosition
         bitPosition += 1
@@ -29,7 +27,6 @@ extension RFC_1951.BitWriter {
         }
     }
 
-    /// Write multiple bits (LSB first)
     mutating func writeBits(_ value: UInt32, count: Int) {
         var v = value
         (0..<count).forEach { _ in
@@ -38,14 +35,12 @@ extension RFC_1951.BitWriter {
         }
     }
 
-    /// Write bits in reverse order (MSB first) - for Huffman codes
     mutating func writeBitsReversed(_ value: UInt32, count: Int) {
         for i in stride(from: count - 1, through: 0, by: -1) {
             writeBit(UInt8((value >> i) & 1))
         }
     }
 
-    /// Align to byte boundary by padding with zeros
     mutating func alignToByte() {
         if bitPosition > 0 {
             buffer.append(Byte(currentByte))
@@ -54,30 +49,25 @@ extension RFC_1951.BitWriter {
         }
     }
 
-    /// Write a byte directly (must be byte-aligned)
     mutating func writeByte(_ byte: UInt8) {
         alignToByte()
         buffer.append(Byte(byte))
     }
 
-    /// Write bytes directly (must be byte-aligned)
     mutating func writeBytes<Bytes: Swift.Sequence>(_ bytes: Bytes) where Bytes.Element == Byte {
         alignToByte()
         buffer.append(contentsOf: bytes)
     }
 
-    /// Write a 16-bit little-endian value (must be byte-aligned)
     mutating func writeUInt16LE(_ value: UInt16) {
         writeBytes(value.bytes(endianness: .little))
     }
 
-    /// Flush any remaining bits and return the buffer
     mutating func finish() -> Buffer {
         alignToByte()
         return buffer
     }
 
-    /// Get current buffer content without finishing
     var output: Buffer {
         var copy = buffer
         if bitPosition > 0 {

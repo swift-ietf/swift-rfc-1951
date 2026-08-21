@@ -1,12 +1,10 @@
-// RFC_1951.BitReader.swift
-
 internal import Binary_Endianness_Primitives
 internal import Binary_Primitives_Standard_Library_Integration
 internal import Byte_Primitives
 internal import Byte_Primitives_Standard_Library_Integration
 
 extension RFC_1951 {
-    /// Reads bits from a byte stream, LSB first (per DEFLATE spec)
+
     struct BitReader<Bytes: Swift.Collection> where Bytes.Element == Byte {
         private let bytes: Bytes
         private var index: Bytes.Index
@@ -21,12 +19,11 @@ extension RFC_1951 {
 }
 
 extension RFC_1951.BitReader {
-    /// Whether there are more bits available
+
     var hasMoreBits: Bool {
         bitsRemaining > 0 || index < bytes.endIndex
     }
 
-    /// Read a single bit (LSB first within each byte)
     mutating func readBit() throws(RFC_1951.Error) -> UInt8 {
         if bitsRemaining == 0 {
             guard index < bytes.endIndex else {
@@ -43,7 +40,6 @@ extension RFC_1951.BitReader {
         return bit
     }
 
-    /// Read multiple bits (LSB first), returns value with first bit in LSB position
     mutating func readBits(_ count: Int) throws(RFC_1951.Error) -> UInt32 {
         var result: UInt32 = 0
         for i in 0..<count {
@@ -53,12 +49,10 @@ extension RFC_1951.BitReader {
         return result
     }
 
-    /// Align to byte boundary (discard remaining bits in current byte)
     mutating func alignToByte() {
         bitsRemaining = 0
     }
 
-    /// Read bytes directly (must be byte-aligned)
     mutating func readBytes(_ count: Int) throws(RFC_1951.Error) -> [Byte] {
         alignToByte()
         var result: [Byte] = []
@@ -73,7 +67,6 @@ extension RFC_1951.BitReader {
         return result
     }
 
-    /// Read a 16-bit little-endian value (must be byte-aligned)
     mutating func readUInt16LE() throws(RFC_1951.Error) -> UInt16 {
         let bytes = try readBytes(2)
         return UInt16(bytes: bytes, endianness: .little)!

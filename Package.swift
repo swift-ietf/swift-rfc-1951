@@ -2,7 +2,6 @@
 
 import PackageDescription
 
-// RFC 1951: DEFLATE Compressed Data Format Specification
 let package = Package(
     name: "swift-rfc-1951",
     platforms: [

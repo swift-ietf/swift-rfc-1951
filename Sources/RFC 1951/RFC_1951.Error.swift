@@ -1,44 +1,31 @@
-// RFC_1951.Error.swift
-
 public import Byte_Primitives
 
 extension RFC_1951 {
-    /// Errors that can occur during DEFLATE decompression
+
     public enum Error: Swift.Error, Sendable, Equatable {
-        /// Input data is empty
+
         case empty
 
-        /// Invalid block type encountered (must be 0, 1, or 2)
         case invalidBlockType(_ value: Byte)
 
-        /// Stored block length validation failed (LEN != ~NLEN)
         case invalidStoredBlockLength
 
-        /// Huffman code is invalid or incomplete
         case invalidHuffmanCode
 
-        /// Back-reference distance is zero (invalid)
         case invalidDistance
 
-        /// Back-reference points before start of output
         case distanceTooFar
 
-        /// Unexpected end of input stream
         case unexpectedEndOfInput
 
-        /// Code length code lengths are invalid
         case invalidCodeLengthCodes
 
-        /// Literal/length tree is invalid
         case invalidLiteralLengthTree
 
-        /// Distance tree is invalid
         case invalidDistanceTree
 
-        /// Reserved or invalid length code encountered
         case invalidLengthCode(_ code: Int)
 
-        /// Reserved or invalid distance code encountered
         case invalidDistanceCode(_ code: Int)
     }
 }

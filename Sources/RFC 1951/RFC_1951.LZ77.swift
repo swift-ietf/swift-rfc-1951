@@ -1,16 +1,11 @@
-// RFC_1951.LZ77.swift
-
 internal import Byte_Primitives
 internal import Byte_Primitives_Standard_Library_Integration
 
 extension RFC_1951 {
-    /// LZ77 compression engine
-    ///
-    /// Finds repeated sequences in the input and represents them as
-    /// (length, distance) pairs.
+
     struct LZ77 {
-        /// Hash table for finding matches
-        private var hashTable: [Int: [Int]]  // hash -> list of positions
+
+        private var hashTable: [Int: [Int]]
         private var windowStart: Int = 0
 
         init() {
@@ -20,23 +15,19 @@ extension RFC_1951 {
 }
 
 extension RFC_1951.LZ77 {
-    /// Maximum backward distance (32KB window)
+
     static let maxDistance = 32768
 
-    /// Maximum match length
     static let maxLength = 258
 
-    /// Minimum match length (shorter matches aren't worth encoding)
     static let minMatch = 3
 
-    /// Compute hash for 3 bytes at position
     private func hash(of bytes: [Byte], at position: Int) -> Int {
         guard position + 2 < bytes.count else { return 0 }
         return Int(bytes[position]) | (Int(bytes[position + 1]) << 8)
             | (Int(bytes[position + 2]) << 16)
     }
 
-    /// Find the longest match at the current position
     mutating func findMatch(
         in bytes: [Byte],
         at position: Int,
@@ -51,14 +42,12 @@ extension RFC_1951.LZ77 {
         if let candidates = hashTable[h] {
             let minPos = max(0, position - Self.maxDistance)
 
-            // Search from most recent to oldest
             for candidatePos in candidates.reversed() {
                 guard candidatePos >= minPos else { break }
 
                 let distance = position - candidatePos
                 guard distance > 0, distance <= Self.maxDistance else { continue }
 
-                // Count matching bytes
                 var length = 0
                 while position + length < bytes.count && length < Self.maxLength
                     && bytes[candidatePos + length] == bytes[position + length]
@@ -70,7 +59,6 @@ extension RFC_1951.LZ77 {
                     bestLength = length
                     bestDistance = distance
 
-                    // Early exit for long matches
                     if length >= maxLazyMatch {
                         break
                     }
@@ -82,7 +70,6 @@ extension RFC_1951.LZ77 {
         return (bestLength, bestDistance)
     }
 
-    /// Update hash table with current position
     mutating func updateHash(for bytes: [Byte], at position: Int) {
         guard position + 2 < bytes.count else { return }
 
@@ -92,22 +79,18 @@ extension RFC_1951.LZ77 {
         }
         hashTable[h]!.append(position)
 
-        // Prune old entries outside the window
         let minPos = max(0, position - Self.maxDistance)
         hashTable[h] = hashTable[h]!.filter { $0 >= minPos }
     }
 
-    /// Reset the compressor state
     mutating func reset() {
         hashTable.removeAll()
         windowStart = 0
     }
 }
 
-// MARK: - LZ77 Token
-
 extension RFC_1951 {
-    /// Encode input bytes to LZ77 tokens
+
     static func encodeLZ77(_ input: [Byte], level: Level) -> [LZ77Token] {
         if level == .none || input.isEmpty {
             return input.map { .literal($0) }
@@ -119,7 +102,6 @@ extension RFC_1951 {
         var lz77 = LZ77()
         var position = 0
 
-        // Lazy match threshold based on compression level
         let lazyMatchThreshold: Int
         switch level {
         case .none: lazyMatchThreshold = 0
@@ -133,7 +115,6 @@ extension RFC_1951 {
             {
                 tokens.append(.reference(length: match.length, distance: match.distance))
 
-                // Update hash for all positions in the match
                 (0..<match.length).forEach { i in
                     lz77.updateHash(for: input, at: position + i)
                 }
