@@ -1,4 +1,4 @@
-import Byte_Primitives
+import Byte
 import Testing
 
 @testable import RFC_1951
