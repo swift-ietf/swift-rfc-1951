@@ -1,5 +1,5 @@
-internal import Binary_Endianness
-internal import Binary_Standard_Library_Integration
+internal import Binary
+internal import Binary
 internal import Byte
 
 extension RFC_1951 {
