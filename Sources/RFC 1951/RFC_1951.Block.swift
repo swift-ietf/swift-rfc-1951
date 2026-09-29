@@ -50,7 +50,7 @@ extension RFC_1951 {
         for token in tokens {
             switch token {
             case .literal(let byte):
-                encodeFixedLiteral(Int(byte), into: &writer)
+                encodeFixedLiteral(Int(byte.underlying), into: &writer)
 
             case .reference(let length, let distance):
                 encodeFixedLengthDistance(length: length, distance: distance, into: &writer)
@@ -166,7 +166,7 @@ extension RFC_1951 {
             )
 
         case .reserved:
-            throw .invalidBlockType(3)
+            throw .invalidBlockType(Byte(3))
         }
 
         return isFinal

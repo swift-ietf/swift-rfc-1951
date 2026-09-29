@@ -24,8 +24,8 @@ extension RFC_1951.LZ77 {
 
     private func hash(of bytes: [Byte], at position: Int) -> Int {
         guard position + 2 < bytes.count else { return 0 }
-        return Int(bytes[position]) | (Int(bytes[position + 1]) << 8)
-            | (Int(bytes[position + 2]) << 16)
+        return Int(bytes[position].underlying) | (Int(bytes[position + 1].underlying) << 8)
+            | (Int(bytes[position + 2].underlying) << 16)
     }
 
     mutating func findMatch(
