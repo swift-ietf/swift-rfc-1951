@@ -54,7 +54,7 @@ extension RFC_1951.BitWriter {
         buffer.append(Byte(byte))
     }
 
-    mutating func writeBytes<Bytes: Swift.Sequence>(_ bytes: Bytes) where Bytes.Element == Byte {
+    mutating func writeBytes<Bytes: Swift::Sequence>(_ bytes: Bytes) where Bytes.Element == Byte {
         alignToByte()
         buffer.append(contentsOf: bytes)
     }

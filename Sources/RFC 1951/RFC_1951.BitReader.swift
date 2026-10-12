@@ -5,7 +5,7 @@ internal import Byte
 
 extension RFC_1951 {
 
-    struct BitReader<Bytes: Swift.Collection> where Bytes.Element == Byte {
+    struct BitReader<Bytes: Swift::Collection> where Bytes.Element == Byte {
         private let bytes: Bytes
         private var index: Bytes.Index
         private var currentByte: UInt8 = 0

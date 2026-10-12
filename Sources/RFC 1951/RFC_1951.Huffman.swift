@@ -81,7 +81,7 @@ extension RFC_1951.HuffmanTree {
         return result
     }
 
-    mutating func decode<Bytes: Swift.Collection>(
+    mutating func decode<Bytes: Swift::Collection>(
         from reader: inout RFC_1951.BitReader<Bytes>
     ) throws(RFC_1951.Error) -> Int {
 
@@ -187,7 +187,7 @@ extension RFC_1951 {
         11, 11, 12, 12, 13, 13,
     ]
 
-    static func decodeLength<Bytes: Swift.Collection>(
+    static func decodeLength<Bytes: Swift::Collection>(
         code: Int,
         from reader: inout BitReader<Bytes>
     ) throws(Error) -> Int {
@@ -204,7 +204,7 @@ extension RFC_1951 {
         return base
     }
 
-    static func decodeDistance<Bytes: Swift.Collection>(
+    static func decodeDistance<Bytes: Swift::Collection>(
         code: Int,
         from reader: inout BitReader<Bytes>
     ) throws(Error) -> Int {
@@ -227,7 +227,7 @@ extension RFC_1951 {
         16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15,
     ]
 
-    static func readDynamicTrees<Bytes: Swift.Collection>(
+    static func readDynamicTrees<Bytes: Swift::Collection>(
         from reader: inout BitReader<Bytes>
     ) throws(Error) -> (literalLength: HuffmanTree, distance: HuffmanTree) {
 

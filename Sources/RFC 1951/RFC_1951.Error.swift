@@ -2,7 +2,7 @@ public import Byte
 
 extension RFC_1951 {
 
-    public enum Error: Swift.Error, Sendable, Equatable {
+    public enum Error: Swift::Error, Sendable, Equatable {
 
         case empty
 

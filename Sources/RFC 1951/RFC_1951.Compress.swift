@@ -8,7 +8,7 @@ extension RFC_1951 {
         level: Level = .balanced
     )
     where
-        Input: Swift.Collection, Input.Element == Byte, Output: RangeReplaceableCollection,
+        Input: Swift::Collection, Input.Element == Byte, Output: RangeReplaceableCollection,
         Output.Element == Byte
     {
         let inputArray = Array(input)
@@ -33,7 +33,7 @@ extension RFC_1951 {
     public static func compress<Bytes>(
         _ input: Bytes,
         level: Level = .balanced
-    ) -> [Byte] where Bytes: Swift.Collection, Bytes.Element == Byte {
+    ) -> [Byte] where Bytes: Swift::Collection, Bytes.Element == Byte {
         var output: [Byte] = []
         compress(input, into: &output, level: level)
         return output
@@ -122,7 +122,7 @@ extension RFC_1951 {
         level: Level = .balanced
     )
     where
-        Input: Swift.Collection, Input.Element == Byte, Output: RangeReplaceableCollection,
+        Input: Swift::Collection, Input.Element == Byte, Output: RangeReplaceableCollection,
         Output.Element == Byte
     {
 
@@ -132,7 +132,7 @@ extension RFC_1951 {
     public static func compressRaw<Bytes>(
         _ input: Bytes,
         level: Level = .balanced
-    ) -> [Byte] where Bytes: Swift.Collection, Bytes.Element == Byte {
+    ) -> [Byte] where Bytes: Swift::Collection, Bytes.Element == Byte {
         compress(input, level: level)
     }
 }

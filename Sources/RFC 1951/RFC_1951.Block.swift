@@ -130,7 +130,7 @@ extension RFC_1951 {
 
 extension RFC_1951 {
 
-    static func decodeBlock<Bytes: Swift.Collection, Output: RangeReplaceableCollection>(
+    static func decodeBlock<Bytes: Swift::Collection, Output: RangeReplaceableCollection>(
         from reader: inout BitReader<Bytes>,
         into output: inout Output
     ) throws(Error) -> Bool where Bytes.Element == Byte, Output.Element == Byte {
@@ -173,7 +173,7 @@ extension RFC_1951 {
     }
 
     private static func decodeStoredBlock<
-        Bytes: Swift.Collection,
+        Bytes: Swift::Collection,
         Output: RangeReplaceableCollection
     >(
         from reader: inout BitReader<Bytes>,
@@ -194,7 +194,7 @@ extension RFC_1951 {
     }
 
     private static func decodeHuffmanBlock<
-        Bytes: Swift.Collection,
+        Bytes: Swift::Collection,
         Output: RangeReplaceableCollection
     >(
         from reader: inout BitReader<Bytes>,
