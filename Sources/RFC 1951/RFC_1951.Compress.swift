@@ -8,7 +8,9 @@ extension RFC_1951 {
         level: Level = .balanced
     )
     where
-        Input: Swift::Collection, Input.Element == Byte, Output: RangeReplaceableCollection,
+        Input: Swift::Collection,
+        Input.Element == Byte,
+        Output: RangeReplaceableCollection,
         Output.Element == Byte
     {
         let inputArray = Array(input)
@@ -122,7 +124,9 @@ extension RFC_1951 {
         level: Level = .balanced
     )
     where
-        Input: Swift::Collection, Input.Element == Byte, Output: RangeReplaceableCollection,
+        Input: Swift::Collection,
+        Input.Element == Byte,
+        Output: RangeReplaceableCollection,
         Output.Element == Byte
     {
 

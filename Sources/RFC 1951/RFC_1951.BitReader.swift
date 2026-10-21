@@ -1,6 +1,4 @@
 internal import Binary
-internal import Binary
-internal import Byte
 internal import Byte
 
 extension RFC_1951 {
@@ -69,6 +67,9 @@ extension RFC_1951.BitReader {
 
     mutating func readUInt16LE() throws(RFC_1951.Error) -> UInt16 {
         let bytes = try readBytes(2)
-        return UInt16(bytes: bytes, endianness: .little)!
+        guard let value = UInt16(bytes: bytes, endianness: .little) else {
+            preconditionFailure("Two bytes always decode as UInt16")
+        }
+        return value
     }
 }

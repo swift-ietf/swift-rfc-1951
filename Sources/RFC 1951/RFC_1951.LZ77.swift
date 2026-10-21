@@ -1,5 +1,4 @@
 internal import Byte
-internal import Byte
 
 extension RFC_1951 {
 
@@ -74,13 +73,11 @@ extension RFC_1951.LZ77 {
         guard position + 2 < bytes.count else { return }
 
         let h = hash(of: bytes, at: position)
-        if hashTable[h] == nil {
-            hashTable[h] = []
-        }
-        hashTable[h]!.append(position)
+        var positions = hashTable.removeValue(forKey: h) ?? []
+        positions.append(position)
 
         let minPos = max(0, position - Self.maxDistance)
-        hashTable[h] = hashTable[h]!.filter { $0 >= minPos }
+        hashTable[h] = positions.filter { $0 >= minPos }
     }
 
     mutating func reset() {
@@ -111,8 +108,7 @@ extension RFC_1951 {
         }
 
         while position < input.count {
-            if let match = lz77.findMatch(in: input, at: position, maxLazyMatch: lazyMatchThreshold)
-            {
+            if let match = lz77.findMatch(in: input, at: position, maxLazyMatch: lazyMatchThreshold) {
                 tokens.append(.reference(length: match.length, distance: match.distance))
 
                 (0..<match.length).forEach { i in

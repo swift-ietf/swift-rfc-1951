@@ -7,7 +7,9 @@ extension RFC_1951 {
         into output: inout Output
     ) throws(Error)
     where
-        Input: Swift::Collection, Input.Element == Byte, Output: RangeReplaceableCollection,
+        Input: Swift::Collection,
+        Input.Element == Byte,
+        Output: RangeReplaceableCollection,
         Output.Element == Byte
     {
         guard !input.isEmpty else {
@@ -38,7 +40,9 @@ extension RFC_1951 {
         into output: inout Output
     ) throws(Error)
     where
-        Input: Swift::Collection, Input.Element == Byte, Output: RangeReplaceableCollection,
+        Input: Swift::Collection,
+        Input.Element == Byte,
+        Output: RangeReplaceableCollection,
         Output.Element == Byte
     {
 

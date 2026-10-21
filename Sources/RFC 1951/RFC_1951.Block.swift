@@ -1,5 +1,4 @@
 internal import Byte
-internal import Byte
 
 extension RFC_1951 {
 

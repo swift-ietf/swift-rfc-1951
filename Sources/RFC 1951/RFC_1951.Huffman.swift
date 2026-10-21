@@ -142,12 +142,18 @@ extension RFC_1951 {
         (256...279).forEach { lengths[$0] = 7 }
         (280...287).forEach { lengths[$0] = 8 }
 
-        return HuffmanTree(lengths: lengths)!
+        guard let tree = HuffmanTree(lengths: lengths) else {
+            preconditionFailure("The fixed literal/length code lengths form a valid tree")
+        }
+        return tree
     }
 
     static func makeFixedDistanceTree() -> HuffmanTree {
         let lengths = [Int](repeating: 5, count: 32)
-        return HuffmanTree(lengths: lengths)!
+        guard let tree = HuffmanTree(lengths: lengths) else {
+            preconditionFailure("The fixed distance code lengths form a valid tree")
+        }
+        return tree
     }
 }
 
@@ -288,7 +294,10 @@ extension RFC_1951 {
         let distanceTree: HuffmanTree
         if distanceLengths.allSatisfy({ $0 == 0 }) {
 
-            distanceTree = HuffmanTree(lengths: [1])!
+            guard let placeholder = HuffmanTree(lengths: [1]) else {
+                preconditionFailure("A single one-bit code length forms a valid tree")
+            }
+            distanceTree = placeholder
         } else {
             guard let tree = HuffmanTree(lengths: distanceLengths) else {
                 throw .invalidDistanceTree
