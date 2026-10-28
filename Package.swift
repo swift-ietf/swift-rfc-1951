@@ -41,10 +41,6 @@ let package = Package(
                     package: "swift-binary"
                 ),
                 .product(name: "Byte", package: "swift-byte"),
-                .product(
-                    name: "Byte",
-                    package: "swift-byte"
-                ),
             ]
         ),
         .testTarget(
@@ -52,10 +48,6 @@ let package = Package(
             dependencies: [
                 .target(name: "RFC 1951"),
                 .product(name: "Byte", package: "swift-byte"),
-                .product(
-                    name: "Byte",
-                    package: "swift-byte"
-                ),
             ]
         ),
     ],
