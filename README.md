@@ -1,6 +1,6 @@
 # swift-rfc-1951
 
-Use this package when you need to compress or decompress raw DEFLATE data, as found inside a ZIP entry or a PNG image. Start from `RFC_1951.compress(_:level:)` and `RFC_1951.decompress(_:)`. If the data carries the zlib header and Adler-32 checksum, use swift-rfc-1950.
+Use this package when you need to compress or decompress raw DEFLATE data, as found inside ZIP entries. Start from `RFC_1951.compress(_:level:)` and `RFC_1951.decompress(_:)`. If the data carries the zlib header and Adler-32 checksum, use swift-rfc-1950.
 
 ## Laws
 
