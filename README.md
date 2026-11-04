@@ -1,35 +1,13 @@
 # swift-rfc-1951
 
-![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
+Use this package when you need to compress or decompress raw DEFLATE data, as found inside a ZIP entry or a PNG image. Start from `RFC_1951.compress(_:level:)` and `RFC_1951.decompress(_:)`. If the data carries the zlib header and Adler-32 checksum, use swift-rfc-1950.
 
-DEFLATE compression and decompression as specified in RFC 1951.
+## Laws
 
-## Standard Reference
-
-- **RFC**: 1951
-- **Title**: DEFLATE Compressed Data Format Specification
-
-## Installation
-
-Add the package to your `Package.swift` dependencies:
-
-```swift
-dependencies: [
-    .package(url: "https://github.com/swift-ietf/swift-rfc-1951.git", from: "0.1.0")
-]
-```
-
-Add the product to a target that needs it:
-
-```swift
-.target(
-    name: "YourTarget",
-    dependencies: [
-        .product(name: "RFC 1951", package: "swift-rfc-1951")
-    ]
-)
-```
-
-## License
-
-Apache 2.0. See [LICENSE.md](LICENSE.md).
+- Output is raw DEFLATE with no header or checksum. `RFC_1951.compressRaw(_:level:)` and `RFC_1951.decompressRaw(_:)` give exactly the same results as `RFC_1951.compress(_:level:)` and `RFC_1951.decompress(_:)`.
+- `RFC_1951.compress(_:into:level:)` appends to the buffer and leaves its existing bytes in place.
+- Empty input compresses to a single empty stored block, so the output is never empty. Decompressing empty input fails with `RFC_1951.Error.empty`.
+- The compressor works in 32 KiB chunks. Each chunk becomes its own block, and back-references never reach into an earlier chunk. A block is written either stored or with the fixed Huffman code, whichever is estimated to be smaller. Dynamic Huffman blocks are never written, so output is often larger than zlib's.
+- `RFC_1951.Level.none` writes only stored blocks of up to 65,535 bytes. The other levels differ only in how long the match search runs before it accepts a match, and all of them decompress to the input.
+- The decompressor reads stored, fixed Huffman and dynamic Huffman blocks, so it reads streams written by zlib. Input that ends before the final block fails. Decoding stops at the final block and ignores any bytes after it.
+- Decompression has no limit on output size.
