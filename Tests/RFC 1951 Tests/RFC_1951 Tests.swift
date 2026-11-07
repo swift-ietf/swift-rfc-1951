@@ -3,8 +3,8 @@ import Testing
 
 @testable import RFC_1951
 
-@Suite("RFC 1951 - DEFLATE Compression")
-struct RFC1951Tests {
+@Suite
+struct `RFC 1951 - DEFLATE Compression` {
 
     @Suite
     struct Unit {
