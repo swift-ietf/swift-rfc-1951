@@ -17,10 +17,11 @@ extension RFC_1951 {
         }
 
         var reader = BitReader(input)
+        let origin = output.count
 
         var isFinal = false
         while !isFinal {
-            isFinal = try decodeBlock(from: &reader, into: &output)
+            isFinal = try decodeBlock(from: &reader, into: &output, origin: origin)
         }
     }
 

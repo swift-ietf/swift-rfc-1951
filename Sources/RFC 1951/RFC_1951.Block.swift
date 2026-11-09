@@ -131,7 +131,8 @@ extension RFC_1951 {
 
     static func decodeBlock<Bytes: Swift::Collection, Output: RangeReplaceableCollection>(
         from reader: inout BitReader<Bytes>,
-        into output: inout Output
+        into output: inout Output,
+        origin: Int
     ) throws(Error) -> Bool where Bytes.Element == Byte, Output.Element == Byte {
 
         let isFinal = try reader.readBit() == 1
@@ -152,7 +153,8 @@ extension RFC_1951 {
                 from: &reader,
                 literalTree: &literalTree,
                 distanceTree: &distanceTree,
-                into: &output
+                into: &output,
+                origin: origin
             )
 
         case .dynamicHuffman:
@@ -161,7 +163,8 @@ extension RFC_1951 {
                 from: &reader,
                 literalTree: &literalTree,
                 distanceTree: &distanceTree,
-                into: &output
+                into: &output,
+                origin: origin
             )
 
         case .reserved:
@@ -199,7 +202,8 @@ extension RFC_1951 {
         from reader: inout BitReader<Bytes>,
         literalTree: inout HuffmanTree,
         distanceTree: inout HuffmanTree,
-        into output: inout Output
+        into output: inout Output,
+        origin: Int
     ) throws(Error) where Bytes.Element == Byte, Output.Element == Byte {
         while true {
             let symbol = try literalTree.decode(from: &reader)
@@ -221,7 +225,7 @@ extension RFC_1951 {
                 }
 
                 var outputArray = Array(output)
-                guard distance <= outputArray.count else {
+                guard distance <= outputArray.count - origin else {
                     throw .distanceTooFar
                 }
 

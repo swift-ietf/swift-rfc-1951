@@ -71,6 +71,23 @@ extension `RFC_1951 Tests` {
         struct `Edge Case` {
 
             @Test
+            func `Back-reference into bytes before the call throws distanceTooFar`() throws {
+                var writer = RFC_1951.BitWriter(into: [Byte]())
+                RFC_1951.encodeFixedHuffmanBlock(
+                    tokens: [.reference(length: 3, distance: 1)],
+                    isFinal: true,
+                    into: &writer
+                )
+                let stream = writer.finish()
+                var output: [Byte] = [Byte(0xAB)]
+
+                #expect(throws: RFC_1951.Error.distanceTooFar) {
+                    try RFC_1951.decompress(stream, into: &output)
+                }
+                #expect(output == [Byte(0xAB)])
+            }
+
+            @Test
             func `Empty data round-trip`() throws {
                 let input: [Byte] = []
                 let compressed = RFC_1951.compress(input)
