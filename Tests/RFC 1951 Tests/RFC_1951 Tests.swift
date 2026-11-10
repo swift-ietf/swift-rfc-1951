@@ -70,6 +70,14 @@ extension `RFC_1951 Tests` {
         @Suite
         struct `Edge Case` {
 
+            @Test(.timeLimit(.minutes(1)), arguments: [RFC_1951.Level.fast, .balanced, .best])
+            func `a long run of one byte compresses in linear time and round-trips`(level: RFC_1951.Level) throws {
+                let input = [Byte](repeating: Byte(0x2A), count: 4 << 20)
+                let compressed = RFC_1951.compress(input, level: level)
+                #expect(compressed.count < input.count / 100)
+                #expect(try RFC_1951.decompress(compressed) == input)
+            }
+
             @Test
             func `Back-reference into bytes before the call throws distanceTooFar`() throws {
                 var writer = RFC_1951.BitWriter(into: [Byte]())
