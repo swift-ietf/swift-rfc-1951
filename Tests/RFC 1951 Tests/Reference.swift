@@ -92,7 +92,7 @@ extension Reference {
                     throw .distanceTooFar
                 }
                 let start = output.count - distance
-                for i in 0..<length {
+                (0..<length).forEach { i in
                     output.append(output[start + i % distance])
                 }
             }

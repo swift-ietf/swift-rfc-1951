@@ -11,7 +11,7 @@ extension `Inflate Equivalence Tests` {
 
         private static let prefix: [Byte] = [Byte(0xAB)]
 
-        private static func fast<Input: Collection>(_ input: Input) -> [Byte] where Input.Element == Byte {
+        private static func fast<Input: Swift.Collection>(_ input: Input) -> [Byte] where Input.Element == Byte {
             var output = prefix
             do throws(RFC_1951.Error) {
                 try RFC_1951.decompress(input, into: &output)
@@ -42,7 +42,7 @@ extension `Inflate Equivalence Tests` {
         private static var everyCodeTokens: [RFC_1951.LZ77Token] {
             var rng = Seeded(1951)
             var tokens: [RFC_1951.LZ77Token] = (0..<33_000).map { _ in .literal(Byte(UInt8.random(in: 0...255, using: &rng))) }
-            for length in 3...258 {
+            (3...258).forEach { length in
                 tokens.append(.reference(length: length, distance: 1 + length % 40))
             }
             for (code, base) in RFC_1951.distanceBase.enumerated() {
@@ -52,8 +52,8 @@ extension `Inflate Equivalence Tests` {
                     tokens.append(.reference(length: 258, distance: distance))
                 }
             }
-            for distance in 1...16 {
-                for length in 3...40 {
+            (1...16).forEach { distance in
+                (3...40).forEach { length in
                     tokens.append(.reference(length: length, distance: distance))
                 }
                 tokens.append(.reference(length: 258, distance: distance))
@@ -95,7 +95,7 @@ extension `Inflate Equivalence Tests` {
             for _ in 0..<25 {
                 var writer = Reference.BitWriter()
                 let blocks = Int.random(in: 1...4, using: &rng)
-                for block in 0..<blocks {
+                (0..<blocks).forEach { block in
                     let isFinal = block == blocks - 1
                     let tokens = Corpus.tokens(
                         count: Int.random(in: 0...400, using: &rng),

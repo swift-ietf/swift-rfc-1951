@@ -27,7 +27,7 @@ extension Corpus {
         }
         var nextCode = [Int](repeating: 0, count: 16)
         var code = 0
-        for bits in 1...15 {
+        (1...15).forEach { bits in
             code = (code + blCount[bits - 1]) << 1
             nextCode[bits] = code
         }

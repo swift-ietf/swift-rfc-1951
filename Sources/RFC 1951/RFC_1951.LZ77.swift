@@ -130,7 +130,7 @@ extension RFC_1951.LZ77 {
                         ) {
                             tokens.append(.reference(length: match.length, distance: match.distance))
 
-                            for offset in 0..<match.length {
+                            (0..<match.length).forEach { offset in
                                 unsafe Self.updateHash(
                                     for: bytes,
                                     at: position + offset,

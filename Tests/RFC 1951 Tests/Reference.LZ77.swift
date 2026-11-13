@@ -76,7 +76,7 @@ extension Reference.LZ77 {
         while position < input.count {
             if let match = lz77.findMatch(in: input, at: position, maxLazyMatch: lazy, maxChain: maxChain) {
                 tokens.append(.reference(length: match.length, distance: match.distance))
-                for offset in 0..<match.length {
+                (0..<match.length).forEach { offset in
                     lz77.updateHash(for: input, at: position + offset)
                 }
                 position += match.length

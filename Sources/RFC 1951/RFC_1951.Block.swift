@@ -85,13 +85,13 @@ extension RFC_1951 {
 
     private static func fixedLiteralCode(_ value: Int) -> (code: Int, count: Int) {
         if value <= 143 {
-            return (0x30 + value, 8)
+            (0x30 + value, 8)
         } else if value <= 255 {
-            return (0x190 + (value - 144), 9)
+            (0x190 + (value - 144), 9)
         } else if value <= 279 {
-            return (value - 256, 7)
+            (value - 256, 7)
         } else {
-            return (0xC0 + (value - 280), 8)
+            (0xC0 + (value - 280), 8)
         }
     }
 
@@ -130,14 +130,14 @@ extension RFC_1951 {
     static func encodeDistanceCode(
         _ distance: Int
     ) -> (code: Int, extra: Int, extraBits: Int) {
-        let index: Int
-        if distance >= 1, distance <= 256 {
-            index = Int(distanceCodeIndex[distance - 1])
-        } else if distance > 256, distance <= 32768 {
-            index = Int(distanceCodeIndex[256 + ((distance - 1) >> 7)])
-        } else {
-            index = 29
-        }
+        let index =
+            if distance >= 1, distance <= 256 {
+                Int(distanceCodeIndex[distance - 1])
+            } else if distance > 256, distance <= 32768 {
+                Int(distanceCodeIndex[256 + ((distance - 1) >> 7)])
+            } else {
+                29
+            }
         return (index, distance - distanceBase[index], distanceExtraBits[index])
     }
 

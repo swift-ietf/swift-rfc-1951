@@ -13,7 +13,7 @@ extension Reference {
             }
             var nextCode = [Int](repeating: 0, count: 16)
             var code = 0
-            for bits in 1...15 {
+            (1...15).forEach { bits in
                 code = (code + blCount[bits - 1]) << 1
                 nextCode[bits] = code
             }
@@ -23,7 +23,7 @@ extension Reference {
                 nextCode[len] += 1
                 if len <= 9 {
                     let reversed = Self.reverse(code, len)
-                    for extra in 0..<(1 << (9 - len)) {
+                    (0..<(1 << (9 - len))).forEach { extra in
                         fastLookup[reversed | extra << len] = (symbol, len)
                     }
                 } else {

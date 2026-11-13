@@ -23,13 +23,13 @@ extension RFC_1951 {
 
             var nextCode = [Int](repeating: 0, count: Self.maxBits + 1)
             var code = 0
-            for bits in 1...Self.maxBits {
+            (1...Self.maxBits).forEach { bits in
                 code = (code + blCount[bits - 1]) << 1
                 nextCode[bits] = code
             }
 
             var kraft = 0
-            for bits in 1...Self.maxBits {
+            (1...Self.maxBits).forEach { bits in
                 kraft += blCount[bits] << (Self.maxBits - bits)
             }
 
@@ -124,7 +124,7 @@ extension RFC_1951.HuffmanTree {
         for (symbol, code, length) in codes where length <= Self.fastBits {
             let baseBits = Self.fastBits - length
             let reversedCode = Self.reverseBits(code, count: length)
-            for extra in 0..<(1 << baseBits) {
+            (0..<(1 << baseBits)).forEach { extra in
                 fastLookup[reversedCode | (extra << length)] = FastEntry(
                     symbol: UInt16(symbol),
                     length: UInt8(length)
@@ -351,12 +351,12 @@ extension RFC_1951 {
 
         let literalTree = HuffmanTree(lengths: literalLengths, payload: literalLengthPayload)
 
-        let distanceTree: HuffmanTree
-        if distanceLengths.allSatisfy({ $0 == 0 }) {
-            distanceTree = HuffmanTree(lengths: [1], payload: distancePayload)
-        } else {
-            distanceTree = HuffmanTree(lengths: distanceLengths, payload: distancePayload)
-        }
+        let distanceTree =
+            if distanceLengths.allSatisfy({ $0 == 0 }) {
+                HuffmanTree(lengths: [1], payload: distancePayload)
+            } else {
+                HuffmanTree(lengths: distanceLengths, payload: distancePayload)
+            }
 
         return (literalTree, distanceTree)
     }

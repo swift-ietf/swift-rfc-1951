@@ -11,10 +11,10 @@ extension `Deflate Equivalence Tests` {
 
         @Test
         func `length and distance codes match the linear search for every value`() {
-            for length in 0...300 {
+            (0...300).forEach { length in
                 #expect(RFC_1951.encodeLengthCode(length) == Reference.lengthCode(length))
             }
-            for distance in -2...33_000 {
+            (-2...33_000).forEach { distance in
                 #expect(RFC_1951.encodeDistanceCode(distance) == Reference.distanceCode(distance))
             }
         }
