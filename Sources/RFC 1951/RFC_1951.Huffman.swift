@@ -4,11 +4,17 @@ extension RFC_1951 {
 
     struct HuffmanTree: Sendable {
 
+        private(set) var table: [UInt32]
+
         private var fastLookup: [FastEntry]
 
         private var tree: [TreeNode]
 
-        init?(lengths: [Int]) {
+        private var payloads: [UInt32]
+
+        let isOversubscribed: Bool
+
+        init(lengths: [Int], payload: (Int) -> UInt32 = { UInt32($0) }) {
 
             var blCount = [Int](repeating: 0, count: Self.maxBits + 1)
             for len in lengths where len > 0 {
@@ -17,9 +23,14 @@ extension RFC_1951 {
 
             var nextCode = [Int](repeating: 0, count: Self.maxBits + 1)
             var code = 0
-            (1...Self.maxBits).forEach { bits in
+            for bits in 1...Self.maxBits {
                 code = (code + blCount[bits - 1]) << 1
                 nextCode[bits] = code
+            }
+
+            var kraft = 0
+            for bits in 1...Self.maxBits {
+                kraft += blCount[bits] << (Self.maxBits - bits)
             }
 
             var codes = [(symbol: Int, code: Int, length: Int)]()
@@ -28,28 +39,16 @@ extension RFC_1951 {
                 nextCode[len] += 1
             }
 
-            fastLookup = [FastEntry](
-                repeating: FastEntry(symbol: 0, length: 0),
-                count: 1 << Self.fastBits
-            )
+            table = []
+            fastLookup = []
             tree = []
+            payloads = []
+            isOversubscribed = kraft > 1 << Self.maxBits
 
-            for (symbol, code, length) in codes {
-                if length <= Self.fastBits {
-
-                    let baseBits = Self.fastBits - length
-                    let reversedCode = Self.reverseBits(code, count: length)
-                    (0..<(1 << baseBits)).forEach { extra in
-                        let index = reversedCode | (extra << length)
-                        fastLookup[index] = FastEntry(symbol: UInt16(symbol), length: UInt8(length))
-                    }
-                }
-            }
-
-            self.tree = []
-            for (symbol, code, length) in codes where length > Self.fastBits {
-
-                insertIntoTree(symbol: symbol, code: code, length: length)
+            if isOversubscribed {
+                buildPlain(codes: codes, count: lengths.count, payload: payload)
+            } else {
+                buildTable(codes: codes, payload: payload)
             }
         }
     }
@@ -61,15 +60,9 @@ extension RFC_1951.HuffmanTree {
 
     private static let fastBits = 9
 
-    private mutating func insertIntoTree(symbol: Int, code: Int, length: Int) {
+    static let primaryBits = 10
 
-        let node = TreeNode(
-            children: (code, length),
-            isLeaf: true,
-            symbol: UInt16(symbol)
-        )
-        tree.append(node)
-    }
+    static let link: UInt32 = 1 << 31
 
     private static func reverseBits(_ value: Int, count: Int) -> Int {
         var result = 0
@@ -81,26 +74,112 @@ extension RFC_1951.HuffmanTree {
         return result
     }
 
-    mutating func decode<Bytes: Swift::Collection>(
-        from reader: inout RFC_1951.BitReader<Bytes>
-    ) throws(RFC_1951.Error) -> Int {
+    private mutating func buildTable(
+        codes: [(symbol: Int, code: Int, length: Int)],
+        payload: (Int) -> UInt32
+    ) {
+        let primaryMask = (1 << Self.primaryBits) - 1
+        table = [UInt32](repeating: 0, count: 1 << Self.primaryBits)
+
+        var subtableBits = [Int](repeating: 0, count: 1 << Self.primaryBits)
+        for (_, code, length) in codes where length > Self.primaryBits {
+            let prefix = Self.reverseBits(code, count: length) & primaryMask
+            subtableBits[prefix] = max(subtableBits[prefix], length - Self.primaryBits)
+        }
+        for (prefix, bits) in subtableBits.enumerated() where bits > 0 {
+            table[prefix] = Self.link | UInt32(bits) << 16 | UInt32(table.count)
+            table.append(contentsOf: repeatElement(0, count: 1 << bits))
+        }
+
+        for (symbol, code, length) in codes {
+            let entry = payload(symbol) | UInt32(length) << 16
+            let reversed = Self.reverseBits(code, count: length)
+            if length <= Self.primaryBits {
+                for index in stride(from: reversed, to: 1 << Self.primaryBits, by: 1 << length) {
+                    table[index] = entry
+                }
+            } else {
+                let link = table[reversed & primaryMask]
+                let offset = Int(link & 0xFFFF)
+                let bits = Int((link >> 16) & 31)
+                let start = reversed >> Self.primaryBits
+                for index in stride(from: start, to: 1 << bits, by: 1 << (length - Self.primaryBits)) {
+                    table[offset + index] = entry
+                }
+            }
+        }
+    }
+
+    private mutating func buildPlain(
+        codes: [(symbol: Int, code: Int, length: Int)],
+        count: Int,
+        payload: (Int) -> UInt32
+    ) {
+        fastLookup = [FastEntry](
+            repeating: FastEntry(symbol: 0, length: 0),
+            count: 1 << Self.fastBits
+        )
+        payloads = (0..<count).map(payload)
+
+        for (symbol, code, length) in codes where length <= Self.fastBits {
+            let baseBits = Self.fastBits - length
+            let reversedCode = Self.reverseBits(code, count: length)
+            for extra in 0..<(1 << baseBits) {
+                fastLookup[reversedCode | (extra << length)] = FastEntry(
+                    symbol: UInt16(symbol),
+                    length: UInt8(length)
+                )
+            }
+        }
+
+        for (symbol, code, length) in codes where length > Self.fastBits {
+            tree.append(TreeNode(children: (code, length), isLeaf: true, symbol: UInt16(symbol)))
+        }
+    }
+
+    @inline(__always)
+    func decode(from reader: inout RFC_1951.BitReader) throws(RFC_1951.Error) -> UInt32 {
+        guard !isOversubscribed else {
+            return payloads[try decodePlain(from: &reader)]
+        }
+        return try table.withUnsafeBufferPointer { table throws(RFC_1951.Error) in
+            try unsafe Self.decode(table, from: &reader)
+        }
+    }
+
+    @inline(__always)
+    static func decode(
+        _ table: UnsafeBufferPointer<UInt32>,
+        from reader: inout RFC_1951.BitReader
+    ) throws(RFC_1951.Error) -> UInt32 {
+        let bits = reader.buffer
+        var entry = unsafe table[Int(truncatingIfNeeded: bits) & ((1 << primaryBits) - 1)]
+        if entry & link != 0 {
+            let width = (entry >> 16) & 31
+            let index = Int(truncatingIfNeeded: (bits >> UInt64(primaryBits)) & ((1 &<< UInt64(width)) &- 1))
+            entry = unsafe table[Int(entry & 0xFFFF) &+ index]
+        }
+        let length = Int((entry >> 16) & 31)
+        guard length != 0, length <= reader.available else {
+            throw .invalidHuffmanCode
+        }
+        reader.consume(length)
+        return entry
+    }
+
+    private func decodePlain(from reader: inout RFC_1951.BitReader) throws(RFC_1951.Error) -> Int {
 
         var bits: UInt32 = 0
         var bitsRead = 0
 
         while bitsRead < Self.fastBits && reader.hasMoreBits {
             let bit = try reader.readBit()
-            bits |= UInt32(bit) << bitsRead
+            bits |= bit << bitsRead
             bitsRead += 1
 
-            if bitsRead <= Self.fastBits {
-                let entry = fastLookup[Int(bits)]
-                if entry.length > 0 && entry.length <= bitsRead {
-
-                    if entry.length == bitsRead {
-                        return Int(entry.symbol)
-                    }
-                }
+            let entry = fastLookup[Int(bits)]
+            if entry.length > 0 && Int(entry.length) == bitsRead {
+                return Int(entry.symbol)
             }
         }
 
@@ -113,18 +192,12 @@ extension RFC_1951.HuffmanTree {
 
         while bitsRead < Self.maxBits && reader.hasMoreBits {
             let bit = try reader.readBit()
-            bits |= UInt32(bit) << bitsRead
+            bits |= bit << bitsRead
             bitsRead += 1
 
-            for node in tree {
-                let nodeCode = node.children.left
-                let nodeLen = node.children.right
-                if nodeLen == bitsRead {
-                    let reversedBits = Self.reverseBits(Int(bits), count: bitsRead)
-                    if reversedBits == nodeCode {
-                        return Int(node.symbol)
-                    }
-                }
+            let reversedBits = Self.reverseBits(Int(bits), count: bitsRead)
+            for node in tree where node.children.right == bitsRead && node.children.left == reversedBits {
+                return Int(node.symbol)
             }
         }
 
@@ -134,26 +207,56 @@ extension RFC_1951.HuffmanTree {
 
 extension RFC_1951 {
 
-    static func makeFixedLiteralLengthTree() -> HuffmanTree {
-        var lengths = [Int](repeating: 0, count: 288)
+    static let fixedLiteralLengths: [Int] =
+        [Int](repeating: 8, count: 144) + [Int](repeating: 9, count: 112)
+        + [Int](repeating: 7, count: 24) + [Int](repeating: 8, count: 8)
 
-        (0...143).forEach { lengths[$0] = 8 }
-        (144...255).forEach { lengths[$0] = 9 }
-        (256...279).forEach { lengths[$0] = 7 }
-        (280...287).forEach { lengths[$0] = 8 }
+    static let fixedLiteralLengthTree = HuffmanTree(
+        lengths: fixedLiteralLengths,
+        payload: literalLengthPayload
+    )
 
-        guard let tree = HuffmanTree(lengths: lengths) else {
-            preconditionFailure("The fixed literal/length code lengths form a valid tree")
+    static let fixedDistanceTree = HuffmanTree(
+        lengths: [Int](repeating: 5, count: 32),
+        payload: distancePayload
+    )
+}
+
+extension RFC_1951 {
+
+    static let kindShift: UInt32 = 25
+
+    static let kindLiteral: UInt32 = 0
+
+    static let kindLengthOrDistance: UInt32 = 1
+
+    static let kindEnd: UInt32 = 2
+
+    static let kindInvalid: UInt32 = 3
+
+    static let extraShift: UInt32 = 21
+
+    static func literalLengthPayload(_ symbol: Int) -> UInt32 {
+        if symbol < 256 {
+            return UInt32(symbol)
         }
-        return tree
+        if symbol == 256 {
+            return kindEnd << kindShift
+        }
+        let index = symbol - 257
+        guard index < lengthBase.count else {
+            return kindInvalid << kindShift | UInt32(symbol)
+        }
+        return kindLengthOrDistance << kindShift | UInt32(lengthExtraBits[index]) << extraShift
+            | UInt32(lengthBase[index])
     }
 
-    static func makeFixedDistanceTree() -> HuffmanTree {
-        let lengths = [Int](repeating: 5, count: 32)
-        guard let tree = HuffmanTree(lengths: lengths) else {
-            preconditionFailure("The fixed distance code lengths form a valid tree")
+    static func distancePayload(_ symbol: Int) -> UInt32 {
+        guard symbol < distanceBase.count else {
+            return kindInvalid << kindShift | UInt32(symbol)
         }
-        return tree
+        return kindLengthOrDistance << kindShift | UInt32(distanceExtraBits[symbol]) << extraShift
+            | UInt32(distanceBase[symbol])
     }
 }
 
@@ -192,39 +295,6 @@ extension RFC_1951 {
         7, 7, 8, 8, 9, 9, 10, 10,
         11, 11, 12, 12, 13, 13,
     ]
-
-    static func decodeLength<Bytes: Swift::Collection>(
-        code: Int,
-        from reader: inout BitReader<Bytes>
-    ) throws(Error) -> Int {
-        let index = code - 257
-        guard index >= 0, index < lengthBase.count else {
-            throw .invalidLengthCode(code)
-        }
-        let base = lengthBase[index]
-        let extraBits = lengthExtraBits[index]
-        if extraBits > 0 {
-            let extra = try reader.readBits(extraBits)
-            return base + Int(extra)
-        }
-        return base
-    }
-
-    static func decodeDistance<Bytes: Swift::Collection>(
-        code: Int,
-        from reader: inout BitReader<Bytes>
-    ) throws(Error) -> Int {
-        guard code >= 0, code < distanceBase.count else {
-            throw .invalidDistanceCode(code)
-        }
-        let base = distanceBase[code]
-        let extraBits = distanceExtraBits[code]
-        if extraBits > 0 {
-            let extra = try reader.readBits(extraBits)
-            return base + Int(extra)
-        }
-        return base
-    }
 }
 
 extension RFC_1951 {
@@ -233,8 +303,8 @@ extension RFC_1951 {
         16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15,
     ]
 
-    static func readDynamicTrees<Bytes: Swift::Collection>(
-        from reader: inout BitReader<Bytes>
+    static func readDynamicTrees(
+        from reader: inout BitReader
     ) throws(Error) -> (literalLength: HuffmanTree, distance: HuffmanTree) {
 
         let hlit = Int(try reader.readBits(5)) + 257
@@ -246,16 +316,14 @@ extension RFC_1951 {
             codeLengthLengths[codeLengthOrder[i]] = Int(try reader.readBits(3))
         }
 
-        guard let codeLengthTree = HuffmanTree(lengths: codeLengthLengths) else {
-            throw .invalidCodeLengthCodes
-        }
+        let codeLengthTree = HuffmanTree(lengths: codeLengthLengths)
 
         var allLengths = [Int]()
-        allLengths.reserveCapacity(hlit + hdist)
+        allLengths.reserveCapacity(hlit + hdist + 138)
 
-        var codeLengthTreeVar = codeLengthTree
         while allLengths.count < hlit + hdist {
-            let symbol = try codeLengthTreeVar.decode(from: &reader)
+            reader.refill()
+            let symbol = Int(try codeLengthTree.decode(from: &reader) & 0xFFFF)
 
             if symbol < 16 {
 
@@ -266,43 +334,28 @@ extension RFC_1951 {
                     throw .invalidLiteralLengthTree
                 }
                 let repeatCount = Int(try reader.readBits(2)) + 3
-                for _ in 0..<repeatCount {
-                    allLengths.append(last)
-                }
+                allLengths.append(contentsOf: repeatElement(last, count: repeatCount))
             } else if symbol == 17 {
 
                 let repeatCount = Int(try reader.readBits(3)) + 3
-                for _ in 0..<repeatCount {
-                    allLengths.append(0)
-                }
+                allLengths.append(contentsOf: repeatElement(0, count: repeatCount))
             } else if symbol == 18 {
 
                 let repeatCount = Int(try reader.readBits(7)) + 11
-                for _ in 0..<repeatCount {
-                    allLengths.append(0)
-                }
+                allLengths.append(contentsOf: repeatElement(0, count: repeatCount))
             }
         }
 
         let literalLengths = Array(allLengths.prefix(hlit))
         let distanceLengths = Array(allLengths.dropFirst(hlit).prefix(hdist))
 
-        guard let literalTree = HuffmanTree(lengths: literalLengths) else {
-            throw .invalidLiteralLengthTree
-        }
+        let literalTree = HuffmanTree(lengths: literalLengths, payload: literalLengthPayload)
 
         let distanceTree: HuffmanTree
         if distanceLengths.allSatisfy({ $0 == 0 }) {
-
-            guard let placeholder = HuffmanTree(lengths: [1]) else {
-                preconditionFailure("A single one-bit code length forms a valid tree")
-            }
-            distanceTree = placeholder
+            distanceTree = HuffmanTree(lengths: [1], payload: distancePayload)
         } else {
-            guard let tree = HuffmanTree(lengths: distanceLengths) else {
-                throw .invalidDistanceTree
-            }
-            distanceTree = tree
+            distanceTree = HuffmanTree(lengths: distanceLengths, payload: distancePayload)
         }
 
         return (literalTree, distanceTree)

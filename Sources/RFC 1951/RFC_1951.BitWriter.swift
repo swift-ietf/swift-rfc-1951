@@ -3,12 +3,12 @@ internal import Byte
 
 extension RFC_1951 {
 
-    struct BitWriter<Buffer: RangeReplaceableCollection> where Buffer.Element == Byte {
-        private var buffer: Buffer
-        private var currentByte: UInt8 = 0
-        private var bitPosition: Int = 0
+    struct BitWriter {
+        private var buffer: [Byte]
+        private var accumulator: UInt64 = 0
+        private var bitCount: Int = 0
 
-        init(into buffer: Buffer) {
+        init(into buffer: [Byte]) {
             self.buffer = buffer
         }
     }
@@ -16,36 +16,48 @@ extension RFC_1951 {
 
 extension RFC_1951.BitWriter {
 
+    mutating func reserveCapacity(_ additional: Int) {
+        buffer.reserveCapacity(buffer.count + additional)
+    }
+
     mutating func writeBit(_ bit: UInt8) {
-        currentByte |= (bit & 1) << bitPosition
-        bitPosition += 1
-        if bitPosition == 8 {
-            buffer.append(Byte(currentByte))
-            currentByte = 0
-            bitPosition = 0
-        }
+        writeBits(UInt32(bit & 1), count: 1)
     }
 
+    @inline(__always)
     mutating func writeBits(_ value: UInt32, count: Int) {
-        var v = value
-        (0..<count).forEach { _ in
-            writeBit(UInt8(v & 1))
-            v >>= 1
+        let masked = UInt64(value) & ((1 &<< UInt64(count)) &- 1)
+        accumulator |= masked &<< UInt64(bitCount)
+        bitCount &+= count
+        if bitCount >= 32 {
+            let word = UInt32(truncatingIfNeeded: accumulator)
+            buffer.append(Byte(UInt8(truncatingIfNeeded: word)))
+            buffer.append(Byte(UInt8(truncatingIfNeeded: word &>> 8)))
+            buffer.append(Byte(UInt8(truncatingIfNeeded: word &>> 16)))
+            buffer.append(Byte(UInt8(truncatingIfNeeded: word &>> 24)))
+            accumulator &>>= 32
+            bitCount &-= 32
         }
     }
 
+    @inline(__always)
     mutating func writeBitsReversed(_ value: UInt32, count: Int) {
-        for i in stride(from: count - 1, through: 0, by: -1) {
-            writeBit(UInt8((value >> i) & 1))
+        var reversed: UInt32 = 0
+        var remaining = value
+        for _ in 0..<count {
+            reversed = reversed &<< 1 | remaining & 1
+            remaining &>>= 1
         }
+        writeBits(reversed, count: count)
     }
 
     mutating func alignToByte() {
-        if bitPosition > 0 {
-            buffer.append(Byte(currentByte))
-            currentByte = 0
-            bitPosition = 0
+        while bitCount > 0 {
+            buffer.append(Byte(UInt8(truncatingIfNeeded: accumulator)))
+            accumulator &>>= 8
+            bitCount = Swift.max(bitCount &- 8, 0)
         }
+        accumulator = 0
     }
 
     mutating func writeByte(_ byte: UInt8) {
@@ -62,16 +74,8 @@ extension RFC_1951.BitWriter {
         writeBytes(value.bytes(endianness: .little))
     }
 
-    mutating func finish() -> Buffer {
+    mutating func finish() -> [Byte] {
         alignToByte()
         return buffer
-    }
-
-    var output: Buffer {
-        var copy = buffer
-        if bitPosition > 0 {
-            copy.append(Byte(currentByte))
-        }
-        return copy
     }
 }

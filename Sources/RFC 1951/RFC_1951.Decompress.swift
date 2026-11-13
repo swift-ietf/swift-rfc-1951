@@ -16,12 +16,31 @@ extension RFC_1951 {
             throw .empty
         }
 
-        var reader = BitReader(input)
-        let origin = output.count
+        var window = Window(capacity: input.count * 4)
+        defer { window.deallocate() }
+        let outcome =
+            input.withContiguousStorageIfAvailable { bytes in
+                Result { () throws(Error) in
+                    try unsafe inflate(UnsafeRawBufferPointer(bytes), into: &window)
+                }
+            }
+            ?? Array(input).withUnsafeBytes { bytes in
+                Result { () throws(Error) in
+                    try unsafe inflate(bytes, into: &window)
+                }
+            }
+        window.append(to: &output)
+        try outcome.get()
+    }
 
+    private static func inflate(
+        _ bytes: UnsafeRawBufferPointer,
+        into window: inout Window
+    ) throws(Error) {
+        var reader = unsafe BitReader(bytes)
         var isFinal = false
         while !isFinal {
-            isFinal = try decodeBlock(from: &reader, into: &output, origin: origin)
+            isFinal = try decodeBlock(from: &reader, into: &window)
         }
     }
 

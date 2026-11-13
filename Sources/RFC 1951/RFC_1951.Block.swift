@@ -18,11 +18,11 @@ extension RFC_1951 {
 
 extension RFC_1951 {
 
-    static func encodeStoredBlock<Buffer: RangeReplaceableCollection>(
+    static func encodeStoredBlock(
         data: ArraySlice<Byte>,
         isFinal: Bool,
-        into writer: inout BitWriter<Buffer>
-    ) where Buffer.Element == Byte {
+        into writer: inout BitWriter
+    ) {
 
         writer.writeBit(isFinal ? 1 : 0)
         writer.writeBits(0, count: 2)
@@ -37,103 +37,129 @@ extension RFC_1951 {
         writer.writeBytes(data)
     }
 
-    static func encodeFixedHuffmanBlock<Buffer: RangeReplaceableCollection>(
+    static func encodeFixedHuffmanBlock(
         tokens: [LZ77Token],
         isFinal: Bool,
-        into writer: inout BitWriter<Buffer>
-    ) where Buffer.Element == Byte {
+        into writer: inout BitWriter
+    ) {
 
         writer.writeBit(isFinal ? 1 : 0)
         writer.writeBits(1, count: 2)
+        writer.reserveCapacity(tokens.count * 2 + 8)
 
-        for token in tokens {
-            switch token {
-            case .literal(let byte):
-                encodeFixedLiteral(Int(byte.underlying), into: &writer)
+        fixedLiteralCodes.withUnsafeBufferPointer { literalCodes in
+            for token in tokens {
+                switch token {
+                case .literal(let byte):
+                    unsafe writeCode(literalCodes[Int(byte.underlying)], into: &writer)
 
-            case .reference(let length, let distance):
-                encodeFixedLengthDistance(length: length, distance: distance, into: &writer)
+                case .reference(let length, let distance):
+                    unsafe encodeFixedLengthDistance(
+                        length: length,
+                        distance: distance,
+                        literalCodes: literalCodes,
+                        into: &writer
+                    )
+                }
             }
         }
 
         encodeFixedLiteral(256, into: &writer)
     }
 
-    private static func encodeFixedLiteral<Buffer: RangeReplaceableCollection>(
-        _ value: Int,
-        into writer: inout BitWriter<Buffer>
-    ) where Buffer.Element == Byte {
+    @inline(__always)
+    private static func writeCode(_ code: UInt32, into writer: inout BitWriter) {
+        writer.writeBits(code & 0xFFFF, count: Int(code >> 16))
+    }
 
+    static let fixedLiteralCodes: [UInt32] = (0..<288).map { value in
+        let (code, count) = fixedLiteralCode(value)
+        var reversed: UInt32 = 0
+        var remaining = UInt32(code)
+        for _ in 0..<count {
+            reversed = reversed << 1 | remaining & 1
+            remaining >>= 1
+        }
+        return reversed | UInt32(count) << 16
+    }
+
+    private static func fixedLiteralCode(_ value: Int) -> (code: Int, count: Int) {
         if value <= 143 {
-
-            let code = 0x30 + value
-            writer.writeBitsReversed(UInt32(code), count: 8)
+            return (0x30 + value, 8)
         } else if value <= 255 {
-
-            let code = 0x190 + (value - 144)
-            writer.writeBitsReversed(UInt32(code), count: 9)
+            return (0x190 + (value - 144), 9)
         } else if value <= 279 {
-
-            let code = value - 256
-            writer.writeBitsReversed(UInt32(code), count: 7)
-        } else if value <= 287 {
-
-            let code = 0xC0 + (value - 280)
-            writer.writeBitsReversed(UInt32(code), count: 8)
+            return (value - 256, 7)
+        } else {
+            return (0xC0 + (value - 280), 8)
         }
     }
 
-    private static func encodeFixedLengthDistance<Buffer: RangeReplaceableCollection>(
+    private static func encodeFixedLiteral(
+        _ value: Int,
+        into writer: inout BitWriter
+    ) {
+        writeCode(fixedLiteralCodes[value], into: &writer)
+    }
+
+    @inline(__always)
+    private static func encodeFixedLengthDistance(
         length: Int,
         distance: Int,
-        into writer: inout BitWriter<Buffer>
-    ) where Buffer.Element == Byte {
+        literalCodes: UnsafeBufferPointer<UInt32>,
+        into writer: inout BitWriter
+    ) {
 
         let (lengthCode, lengthExtra, lengthExtraBits) = encodeLengthCode(length)
-        encodeFixedLiteral(lengthCode, into: &writer)
-        if lengthExtraBits > 0 {
-            writer.writeBits(UInt32(lengthExtra), count: lengthExtraBits)
-        }
+        unsafe writeCode(literalCodes[lengthCode], into: &writer)
+        writer.writeBits(UInt32(lengthExtra), count: lengthExtraBits)
 
         let (distCode, distExtra, distExtraBits) = encodeDistanceCode(distance)
         writer.writeBitsReversed(UInt32(distCode), count: 5)
-        if distExtraBits > 0 {
-            writer.writeBits(UInt32(distExtra), count: distExtraBits)
-        }
+        writer.writeBits(UInt32(distExtra), count: distExtraBits)
     }
 
-    private static func encodeLengthCode(_ length: Int) -> (code: Int, extra: Int, extraBits: Int) {
-        for (i, base) in lengthBase.enumerated() {
-            let nextBase = lengthBase.indices.contains(i + 1) ? lengthBase[i + 1] : 259
-            if length >= base && length < nextBase {
-                return (257 + i, length - base, lengthExtraBits[i])
-            }
+    static func encodeLengthCode(_ length: Int) -> (code: Int, extra: Int, extraBits: Int) {
+        guard length >= 3, length <= 258 else {
+            return (285, 0, 0)
         }
-
-        return (285, 0, 0)
+        let index = Int(lengthCodeIndex[length])
+        return (257 + index, length - lengthBase[index], lengthExtraBits[index])
     }
 
-    private static func encodeDistanceCode(
+    static func encodeDistanceCode(
         _ distance: Int
     ) -> (code: Int, extra: Int, extraBits: Int) {
-        for (i, base) in distanceBase.enumerated() {
-            let nextBase = distanceBase.indices.contains(i + 1) ? distanceBase[i + 1] : 32769
-            if distance >= base && distance < nextBase {
-                return (i, distance - base, distanceExtraBits[i])
-            }
+        let index: Int
+        if distance >= 1, distance <= 256 {
+            index = Int(distanceCodeIndex[distance - 1])
+        } else if distance > 256, distance <= 32768 {
+            index = Int(distanceCodeIndex[256 + ((distance - 1) >> 7)])
+        } else {
+            index = 29
         }
-
-        return (29, distance - distanceBase[29], distanceExtraBits[29])
+        return (index, distance - distanceBase[index], distanceExtraBits[index])
     }
+
+    static let lengthCodeIndex: [UInt8] = (0...258).map { length in
+        UInt8(lengthBase.lastIndex { $0 <= length } ?? 0)
+    }
+
+    static let distanceCodeIndex: [UInt8] =
+        (1...256).map { distance in
+            UInt8(distanceBase.lastIndex { $0 <= distance } ?? 0)
+        }
+        + (0..<256).map { high in
+            UInt8(distanceBase.lastIndex { $0 <= (high << 7) + 1 } ?? 0)
+        }
 }
 
 extension RFC_1951 {
 
-    static func decodeBlock<Bytes: Swift::Collection, Output: RangeReplaceableCollection>(
-        from reader: inout BitReader<Bytes>,
-        into output: inout Output,
-        origin: Int
-    ) throws(Error) -> Bool where Bytes.Element == Byte, Output.Element == Byte {
+    static func decodeBlock(
+        from reader: inout BitReader,
+        into window: inout Window
+    ) throws(Error) -> Bool {
 
         let isFinal = try reader.readBit() == 1
         let btype = try reader.readBits(2)
@@ -144,27 +170,23 @@ extension RFC_1951 {
 
         switch blockType {
         case .stored:
-            try decodeStoredBlock(from: &reader, into: &output)
+            try decodeStoredBlock(from: &reader, into: &window)
 
         case .fixedHuffman:
-            var literalTree = makeFixedLiteralLengthTree()
-            var distanceTree = makeFixedDistanceTree()
             try decodeHuffmanBlock(
                 from: &reader,
-                literalTree: &literalTree,
-                distanceTree: &distanceTree,
-                into: &output,
-                origin: origin
+                literalTree: fixedLiteralLengthTree,
+                distanceTree: fixedDistanceTree,
+                into: &window
             )
 
         case .dynamicHuffman:
-            var (literalTree, distanceTree) = try readDynamicTrees(from: &reader)
+            let (literalTree, distanceTree) = try readDynamicTrees(from: &reader)
             try decodeHuffmanBlock(
                 from: &reader,
-                literalTree: &literalTree,
-                distanceTree: &distanceTree,
-                into: &output,
-                origin: origin
+                literalTree: literalTree,
+                distanceTree: distanceTree,
+                into: &window
             )
 
         case .reserved:
@@ -174,13 +196,10 @@ extension RFC_1951 {
         return isFinal
     }
 
-    private static func decodeStoredBlock<
-        Bytes: Swift::Collection,
-        Output: RangeReplaceableCollection
-    >(
-        from reader: inout BitReader<Bytes>,
-        into output: inout Output
-    ) throws(Error) where Bytes.Element == Byte, Output.Element == Byte {
+    private static func decodeStoredBlock(
+        from reader: inout BitReader,
+        into window: inout Window
+    ) throws(Error) {
 
         reader.alignToByte()
 
@@ -191,52 +210,98 @@ extension RFC_1951 {
             throw .invalidStoredBlockLength
         }
 
-        let data = try reader.readBytes(Int(len))
-        output.append(contentsOf: data)
+        try reader.readBytes(Int(len), into: &window)
     }
 
-    private static func decodeHuffmanBlock<
-        Bytes: Swift::Collection,
-        Output: RangeReplaceableCollection
-    >(
-        from reader: inout BitReader<Bytes>,
-        literalTree: inout HuffmanTree,
-        distanceTree: inout HuffmanTree,
-        into output: inout Output,
-        origin: Int
-    ) throws(Error) where Bytes.Element == Byte, Output.Element == Byte {
+    private static func decodeHuffmanBlock(
+        from reader: inout BitReader,
+        literalTree: borrowing HuffmanTree,
+        distanceTree: borrowing HuffmanTree,
+        into window: inout Window
+    ) throws(Error) {
+        try literalTree.table.withUnsafeBufferPointer { literal throws(Error) in
+            try distanceTree.table.withUnsafeBufferPointer { distance throws(Error) in
+                try unsafe decodeSymbols(
+                    from: &reader,
+                    into: &window,
+                    literal: literal,
+                    literalTree: literalTree,
+                    distance: distance,
+                    distanceTree: distanceTree
+                )
+            }
+        }
+    }
+
+    @inline(never)
+    private static func decodePlain(
+        _ tree: borrowing HuffmanTree,
+        from reader: inout BitReader
+    ) throws(Error) -> UInt32 {
+        try tree.decode(from: &reader)
+    }
+
+    private static func decodeSymbols(
+        from reader: inout BitReader,
+        into window: inout Window,
+        literal: UnsafeBufferPointer<UInt32>,
+        literalTree: borrowing HuffmanTree,
+        distance: UnsafeBufferPointer<UInt32>,
+        distanceTree: borrowing HuffmanTree
+    ) throws(Error) {
+        let literalIsPlain = literalTree.isOversubscribed
+        let distanceIsPlain = distanceTree.isOversubscribed
+        var bits = reader
+        var out = window
+        defer {
+            reader = bits
+            window = out
+        }
         while true {
-            let symbol = try literalTree.decode(from: &reader)
-
-            if symbol < 256 {
-
-                output.append(Byte(UInt8(symbol)))
-            } else if symbol == 256 {
-
-                break
+            out.reserve(Window.slack)
+            if bits.available < 15 {
+                bits.refill()
+            }
+            let entry: UInt32
+            if literalIsPlain {
+                reader = bits
+                entry = try decodePlain(literalTree, from: &reader)
+                bits = reader
             } else {
+                entry = try unsafe HuffmanTree.decode(literal, from: &bits)
+            }
 
-                let length = try decodeLength(code: symbol, from: &reader)
-                let distanceCode = try distanceTree.decode(from: &reader)
-                let distance = try decodeDistance(code: distanceCode, from: &reader)
+            switch entry >> kindShift {
+            case kindLiteral:
+                out.append(UInt8(truncatingIfNeeded: entry))
 
-                guard distance > 0 else {
-                    throw .invalidDistance
+            case kindEnd:
+                return
+
+            case kindLengthOrDistance:
+                bits.refill()
+                let length = Int(entry & 0xFFFF) &+ Int(try bits.take(Int((entry >> extraShift) & 15)))
+                let distanceEntry: UInt32
+                if distanceIsPlain {
+                    reader = bits
+                    distanceEntry = try decodePlain(distanceTree, from: &reader)
+                    bits = reader
+                } else {
+                    distanceEntry = try unsafe HuffmanTree.decode(distance, from: &bits)
                 }
-
-                var outputArray = Array(output)
-                guard distance <= outputArray.count - origin else {
+                guard distanceEntry >> kindShift == kindLengthOrDistance else {
+                    throw .invalidDistanceCode(Int(distanceEntry & 0xFFFF))
+                }
+                let distance =
+                    Int(distanceEntry & 0xFFFF)
+                    &+ Int(try bits.take(Int((distanceEntry >> extraShift) & 15)))
+                guard distance <= out.count else {
                     throw .distanceTooFar
                 }
+                out.copy(distance: distance, length: length)
 
-                let startPos = outputArray.count - distance
-                (0..<length).forEach { i in
-
-                    let srcPos = startPos + (i % distance)
-                    outputArray.append(outputArray[srcPos])
-                }
-
-                output = Output(outputArray)
+            default:
+                throw .invalidLengthCode(Int(entry & 0xFFFF))
             }
         }
     }

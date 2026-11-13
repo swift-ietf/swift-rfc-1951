@@ -4,12 +4,12 @@ extension RFC_1951 {
 
     struct LZ77 {
 
-        private var head: [Int]
-        private var previous: [Int]
+        private var head: [Int32]
+        private var previous: [Int32]
 
         init() {
-            head = [Int](repeating: -1, count: Self.hashSize)
-            previous = [Int](repeating: -1, count: Self.maxDistance)
+            head = [Int32](repeating: -1, count: Self.hashSize)
+            previous = [Int32](repeating: -1, count: Self.maxDistance)
         }
     }
 }
@@ -24,35 +24,59 @@ extension RFC_1951.LZ77 {
 
     static let hashSize = 1 << 15
 
-    private static func hash(of bytes: [Byte], at position: Int) -> Int {
+    @inline(__always)
+    private static func hash(of bytes: UnsafeRawBufferPointer, at position: Int) -> Int {
         let packed =
-            Int(bytes[position].underlying) | (Int(bytes[position + 1].underlying) << 8)
-            | (Int(bytes[position + 2].underlying) << 16)
+            Int(unsafe bytes[position]) | (Int(unsafe bytes[position + 1]) << 8)
+            | (Int(unsafe bytes[position + 2]) << 16)
         return ((packed &* 2_654_435_761) >> 9) & (hashSize - 1)
     }
 
-    func findMatch(
-        in bytes: [Byte],
+    @inline(__always)
+    private static func matchLength(
+        in bytes: UnsafeRawBufferPointer,
+        _ candidate: Int,
+        _ position: Int,
+        limit: Int
+    ) -> Int {
+        var length = 0
+        while length &+ 8 <= limit {
+            let a = unsafe bytes.loadUnaligned(fromByteOffset: candidate &+ length, as: UInt64.self)
+            let b = unsafe bytes.loadUnaligned(fromByteOffset: position &+ length, as: UInt64.self)
+            let difference = UInt64(littleEndian: a) ^ UInt64(littleEndian: b)
+            guard difference == 0 else {
+                return length &+ difference.trailingZeroBitCount &>> 3
+            }
+            length &+= 8
+        }
+        while unsafe length < limit && bytes[candidate &+ length] == bytes[position &+ length] {
+            length &+= 1
+        }
+        return length
+    }
+
+    @inline(__always)
+    private static func findMatch(
+        in bytes: UnsafeRawBufferPointer,
         at position: Int,
+        head: UnsafeMutableBufferPointer<Int32>,
+        previous: UnsafeMutableBufferPointer<Int32>,
         maxLazyMatch: Int,
         maxChain: Int
     ) -> (length: Int, distance: Int)? {
-        guard position + Self.minMatch <= bytes.count else { return nil }
+        guard position + minMatch <= bytes.count else { return nil }
 
-        var bestLength = Self.minMatch - 1
+        var bestLength = minMatch - 1
         var bestDistance = 0
-        let limit = min(Self.maxLength, bytes.count - position)
-        var candidate = head[Self.hash(of: bytes, at: position)]
+        let limit = min(maxLength, bytes.count - position)
+        var candidate = Int(unsafe head[hash(of: bytes, at: position)])
         var chain = maxChain
 
         while candidate >= 0, chain > 0 {
             let distance = position - candidate
-            guard distance > 0, distance <= Self.maxDistance else { break }
+            guard distance > 0, distance <= maxDistance else { break }
 
-            var length = 0
-            while length < limit && bytes[candidate + length] == bytes[position + length] {
-                length += 1
-            }
+            let length = unsafe matchLength(in: bytes, candidate, position, limit: limit)
 
             if length > bestLength {
                 bestLength = length
@@ -60,22 +84,70 @@ extension RFC_1951.LZ77 {
                 if length >= maxLazyMatch || length == limit { break }
             }
 
-            let next = previous[candidate & (Self.maxDistance - 1)]
+            let next = Int(unsafe previous[candidate & (maxDistance - 1)])
             guard next < candidate else { break }
             candidate = next
             chain -= 1
         }
 
-        guard bestLength >= Self.minMatch else { return nil }
+        guard bestLength >= minMatch else { return nil }
         return (bestLength, bestDistance)
     }
 
-    mutating func updateHash(for bytes: [Byte], at position: Int) {
+    @inline(__always)
+    private static func updateHash(
+        for bytes: UnsafeRawBufferPointer,
+        at position: Int,
+        head: UnsafeMutableBufferPointer<Int32>,
+        previous: UnsafeMutableBufferPointer<Int32>
+    ) {
         guard position + 2 < bytes.count else { return }
 
-        let h = Self.hash(of: bytes, at: position)
-        previous[position & (Self.maxDistance - 1)] = head[h]
-        head[h] = position
+        let h = unsafe hash(of: bytes, at: position)
+        unsafe previous[position & (maxDistance - 1)] = head[h]
+        unsafe head[h] = Int32(truncatingIfNeeded: position)
+    }
+
+    mutating func encode(
+        _ input: [Byte],
+        lazyMatchThreshold: Int,
+        maxChain: Int,
+        into tokens: inout [RFC_1951.LZ77Token]
+    ) {
+        precondition(input.count <= Int(Int32.max), "LZ77 positions fit in 32 bits")
+        input.withUnsafeBytes { bytes in
+            head.withUnsafeMutableBufferPointer { head in
+                previous.withUnsafeMutableBufferPointer { previous in
+                    var position = 0
+                    while position < bytes.count {
+                        if let match = unsafe Self.findMatch(
+                            in: bytes,
+                            at: position,
+                            head: head,
+                            previous: previous,
+                            maxLazyMatch: lazyMatchThreshold,
+                            maxChain: maxChain
+                        ) {
+                            tokens.append(.reference(length: match.length, distance: match.distance))
+
+                            for offset in 0..<match.length {
+                                unsafe Self.updateHash(
+                                    for: bytes,
+                                    at: position + offset,
+                                    head: head,
+                                    previous: previous
+                                )
+                            }
+                            position += match.length
+                        } else {
+                            tokens.append(.literal(input[position]))
+                            unsafe Self.updateHash(for: bytes, at: position, head: head, previous: previous)
+                            position += 1
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -89,9 +161,6 @@ extension RFC_1951 {
         var tokens: [LZ77Token] = []
         tokens.reserveCapacity(input.count)
 
-        var lz77 = LZ77()
-        var position = 0
-
         let lazyMatchThreshold: Int
         let maxChain: Int
         switch level {
@@ -101,21 +170,8 @@ extension RFC_1951 {
         case .best: (lazyMatchThreshold, maxChain) = (258, 4096)
         }
 
-        while position < input.count {
-            if let match = lz77.findMatch(in: input, at: position, maxLazyMatch: lazyMatchThreshold, maxChain: maxChain) {
-                tokens.append(.reference(length: match.length, distance: match.distance))
-
-                (0..<match.length).forEach { offset in
-                    lz77.updateHash(for: input, at: position + offset)
-                }
-                position += match.length
-            } else {
-                tokens.append(.literal(input[position]))
-                lz77.updateHash(for: input, at: position)
-                position += 1
-            }
-        }
-
+        var lz77 = LZ77()
+        lz77.encode(input, lazyMatchThreshold: lazyMatchThreshold, maxChain: maxChain, into: &tokens)
         return tokens
     }
 }

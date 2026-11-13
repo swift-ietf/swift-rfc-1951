@@ -17,9 +17,9 @@ extension RFC_1951 {
 
         if inputArray.isEmpty {
 
-            var writer = BitWriter(into: output)
+            var writer = BitWriter(into: [])
             encodeStoredBlock(data: inputArray[...], isFinal: true, into: &writer)
-            output = writer.finish()
+            output.append(contentsOf: writer.finish())
             return
         }
 
@@ -45,7 +45,7 @@ extension RFC_1951 {
         _ input: [Byte],
         into output: inout Output
     ) where Output.Element == Byte {
-        var writer = BitWriter(into: output)
+        var writer = BitWriter(into: [])
         var position = 0
 
         while position < input.count {
@@ -59,7 +59,7 @@ extension RFC_1951 {
             position += blockSize
         }
 
-        output = writer.finish()
+        output.append(contentsOf: writer.finish())
     }
 
     private static func compressDeflate<Output: RangeReplaceableCollection>(
@@ -68,7 +68,7 @@ extension RFC_1951 {
         level: Level
     ) where Output.Element == Byte {
 
-        var writer = BitWriter(into: output)
+        var writer = BitWriter(into: [])
 
         let chunkSize = 32768
         var position = 0
@@ -94,7 +94,7 @@ extension RFC_1951 {
             position += currentChunkSize
         }
 
-        output = writer.finish()
+        output.append(contentsOf: writer.finish())
     }
 
     private static func estimateCompressedSize(tokens: [LZ77Token]) -> Int {
