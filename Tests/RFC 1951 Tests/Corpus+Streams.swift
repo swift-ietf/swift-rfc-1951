@@ -71,7 +71,7 @@ extension Corpus {
         writer.writeBit(isFinal ? 1 : 0)
         writer.writeBits(2, count: 2)
         writer.writeBits(UInt32(literalLengths.count - 257), count: 5)
-        writer.writeBits(UInt32(distanceLengths.count - 1), count: 5)
+        writer.writeBits(UInt32(distanceLengths.endIndex - 1), count: 5)
         writer.writeBits(15, count: 4)
         for symbol in RFC_1951.codeLengthOrder {
             writer.writeBits(UInt32(codeLengthLengths[symbol]), count: 3)
