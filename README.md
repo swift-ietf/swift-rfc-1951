@@ -11,10 +11,7 @@ Use this package when you need to compress or decompress raw DEFLATE data, as fo
 - `RFC_1951.Level.none` writes only stored blocks of up to 65,535 bytes. The other levels differ only in how long the match search runs before it accepts a match, and all of them decompress to the input.
 - The decompressor reads stored, fixed Huffman and dynamic Huffman blocks, so it reads streams written by zlib. Input that ends before the final block fails. Decoding stops at the final block and ignores any bytes after it.
 - Decompression has no limit on output size.
-
-## Cost
-
-- Decompression reads codes through lookup tables and copies matches a word at a time. On Apple silicon in a release build it produces, per second: about 300–400 MB of noisy 8-bit image data, 0.5–1 GB of text, and several GB of long runs or stored blocks, whether zlib or this package wrote the stream. It holds the input, the output and one output buffer that grows by doubling, so peak memory is up to three times the output.
-- Compression spends its time in the match search, so its speed depends on the level and the data: at the default level about 50–80 MB of image or text input per second, about 100 MB of incompressible input and about 1 GB of long runs.
+- Decompression reads codes through lookup tables and copies matches a word at a time. It holds the input, the output and one output buffer that grows by doubling, so peak memory is up to three times the output.
+- Compression spends its time in the match search, so its speed depends on the level and the data.
 - Non-contiguous input is copied into an array once before decoding.
-- `swift test -c release -Xswiftc -enable-testing --filter Throughput` prints these numbers for 8 MB inputs on the machine at hand.
+- `swift test -c release -Xswiftc -enable-testing --filter Throughput` prints compression and decompression throughput for 8 MB inputs on the machine at hand.
