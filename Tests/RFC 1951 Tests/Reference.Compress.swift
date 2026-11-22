@@ -4,7 +4,7 @@ import Byte
 
 extension Reference {
 
-    static func compress(_ input: [Byte], level: RFC_1951.Level) -> [Byte] {
+    static func compress(_ input: [Byte], level: IETF.RFC.`1951`.Level) -> [Byte] {
         var writer = BitWriter()
         if input.isEmpty {
             encodeStoredBlock(input[...], isFinal: true, into: &writer)
@@ -50,7 +50,7 @@ extension Reference {
     }
 
     static func encodeFixedHuffmanBlock(
-        _ tokens: [RFC_1951.LZ77Token],
+        _ tokens: [IETF.RFC.`1951`.LZ77Token],
         isFinal: Bool,
         into writer: inout BitWriter
     ) {
@@ -86,24 +86,24 @@ extension Reference {
     }
 
     static func lengthCode(_ length: Int) -> (code: Int, extra: Int, extraBits: Int) {
-        let bases = RFC_1951.lengthBase
+        let bases = IETF.RFC.`1951`.lengthBase
         for (i, base) in bases.enumerated() {
             let nextBase = bases.indices.contains(i + 1) ? bases[i + 1] : 259
             if length >= base && length < nextBase {
-                return (257 + i, length - base, RFC_1951.lengthExtraBits[i])
+                return (257 + i, length - base, IETF.RFC.`1951`.lengthExtraBits[i])
             }
         }
         return (285, 0, 0)
     }
 
     static func distanceCode(_ distance: Int) -> (code: Int, extra: Int, extraBits: Int) {
-        let bases = RFC_1951.distanceBase
+        let bases = IETF.RFC.`1951`.distanceBase
         for (i, base) in bases.enumerated() {
             let nextBase = bases.indices.contains(i + 1) ? bases[i + 1] : 32769
             if distance >= base && distance < nextBase {
-                return (i, distance - base, RFC_1951.distanceExtraBits[i])
+                return (i, distance - base, IETF.RFC.`1951`.distanceExtraBits[i])
             }
         }
-        return (29, distance - bases[29], RFC_1951.distanceExtraBits[29])
+        return (29, distance - bases[29], IETF.RFC.`1951`.distanceExtraBits[29])
     }
 }

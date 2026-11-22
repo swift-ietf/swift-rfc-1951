@@ -1,6 +1,6 @@
 public import Byte
 
-extension RFC_1951 {
+extension IETF.RFC.`1951` {
 
     public enum Error: Swift::Error, Sendable, Equatable {
 
@@ -30,7 +30,7 @@ extension RFC_1951 {
     }
 }
 
-extension RFC_1951.Error: CustomStringConvertible {
+extension IETF.RFC.`1951`.Error: CustomStringConvertible {
     public var description: String {
         switch self {
         case .empty:

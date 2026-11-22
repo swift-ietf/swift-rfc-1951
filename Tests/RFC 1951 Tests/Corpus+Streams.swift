@@ -43,9 +43,9 @@ extension Corpus {
         referenceShare: Double,
         maxDistance: Int = 32768,
         using rng: inout Seeded
-    ) -> [RFC_1951.LZ77Token] {
+    ) -> [IETF.RFC.`1951`.LZ77Token] {
         var produced = 0
-        var tokens: [RFC_1951.LZ77Token] = []
+        var tokens: [IETF.RFC.`1951`.LZ77Token] = []
         for _ in 0..<count {
             if produced > 0, Double.random(in: 0..<1, using: &rng) < referenceShare {
                 let length = Int.random(in: 3...258, using: &rng)
@@ -73,7 +73,7 @@ extension Corpus {
         writer.writeBits(UInt32(literalLengths.count - 257), count: 5)
         writer.writeBits(UInt32(distanceLengths.endIndex - 1), count: 5)
         writer.writeBits(15, count: 4)
-        for symbol in RFC_1951.codeLengthOrder {
+        for symbol in IETF.RFC.`1951`.codeLengthOrder {
             writer.writeBits(UInt32(codeLengthLengths[symbol]), count: 3)
         }
         let codes = canonicalCodes(codeLengthLengths)
@@ -111,7 +111,7 @@ extension Corpus {
     }
 
     static func dynamicBlock(
-        _ tokens: [RFC_1951.LZ77Token],
+        _ tokens: [IETF.RFC.`1951`.LZ77Token],
         literalLengths: [Int],
         distanceLengths: [Int],
         codeLengthLengths: [Int],
@@ -149,7 +149,7 @@ extension Corpus {
         literal(256)
     }
 
-    static func fixedStream(_ tokens: [RFC_1951.LZ77Token]) -> [Byte] {
+    static func fixedStream(_ tokens: [IETF.RFC.`1951`.LZ77Token]) -> [Byte] {
         var writer = Reference.BitWriter()
         Reference.encodeFixedHuffmanBlock(tokens, isFinal: true, into: &writer)
         return writer.finish()

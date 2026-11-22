@@ -1,7 +1,7 @@
 internal import Binary
 internal import Byte
 
-extension RFC_1951 {
+extension IETF.RFC.`1951` {
 
     struct BitWriter {
         private var buffer: [Byte]
@@ -14,7 +14,7 @@ extension RFC_1951 {
     }
 }
 
-extension RFC_1951.BitWriter {
+extension IETF.RFC.`1951`.BitWriter {
 
     mutating func reserveCapacity(_ additional: Int) {
         buffer.reserveCapacity(buffer.count + additional)

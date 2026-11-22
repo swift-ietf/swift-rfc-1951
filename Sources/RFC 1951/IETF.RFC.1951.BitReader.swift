@@ -1,4 +1,4 @@
-extension RFC_1951 {
+extension IETF.RFC.`1951` {
 
     @safe
     struct BitReader {
@@ -13,7 +13,7 @@ extension RFC_1951 {
     }
 }
 
-extension RFC_1951.BitReader {
+extension IETF.RFC.`1951`.BitReader {
 
     @inline(__always)
     mutating func refill() {
@@ -39,7 +39,7 @@ extension RFC_1951.BitReader {
     }
 
     @inline(__always)
-    mutating func take(_ count: Int) throws(RFC_1951.Error) -> UInt32 {
+    mutating func take(_ count: Int) throws(IETF.RFC.`1951`.Error) -> UInt32 {
         guard count <= available else {
             throw .unexpectedEndOfInput
         }
@@ -48,12 +48,12 @@ extension RFC_1951.BitReader {
         return value
     }
 
-    mutating func readBits(_ count: Int) throws(RFC_1951.Error) -> UInt32 {
+    mutating func readBits(_ count: Int) throws(IETF.RFC.`1951`.Error) -> UInt32 {
         refill()
         return try take(count)
     }
 
-    mutating func readBit() throws(RFC_1951.Error) -> UInt32 {
+    mutating func readBit() throws(IETF.RFC.`1951`.Error) -> UInt32 {
         try readBits(1)
     }
 
@@ -71,7 +71,7 @@ extension RFC_1951.BitReader {
         available = 0
     }
 
-    mutating func readUInt16LE() throws(RFC_1951.Error) -> UInt16 {
+    mutating func readUInt16LE() throws(IETF.RFC.`1951`.Error) -> UInt16 {
         alignToByte()
         guard unsafe position &+ 2 <= bytes.count else {
             throw .unexpectedEndOfInput
@@ -83,8 +83,8 @@ extension RFC_1951.BitReader {
 
     mutating func readBytes(
         _ count: Int,
-        into window: inout RFC_1951.Window
-    ) throws(RFC_1951.Error) {
+        into window: inout IETF.RFC.`1951`.Window
+    ) throws(IETF.RFC.`1951`.Error) {
         alignToByte()
         guard unsafe count <= bytes.count &- position else {
             throw .unexpectedEndOfInput

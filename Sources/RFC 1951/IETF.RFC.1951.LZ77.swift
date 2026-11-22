@@ -1,6 +1,6 @@
 internal import Byte
 
-extension RFC_1951 {
+extension IETF.RFC.`1951` {
 
     struct LZ77 {
 
@@ -14,7 +14,7 @@ extension RFC_1951 {
     }
 }
 
-extension RFC_1951.LZ77 {
+extension IETF.RFC.`1951`.LZ77 {
 
     static let maxDistance = 32768
 
@@ -112,7 +112,7 @@ extension RFC_1951.LZ77 {
         _ input: [Byte],
         lazyMatchThreshold: Int,
         maxChain: Int,
-        into tokens: inout [RFC_1951.LZ77Token]
+        into tokens: inout [IETF.RFC.`1951`.LZ77Token]
     ) {
         precondition(input.count <= Int(Int32.max), "LZ77 positions fit in 32 bits")
         input.withUnsafeBytes { bytes in
@@ -151,7 +151,7 @@ extension RFC_1951.LZ77 {
     }
 }
 
-extension RFC_1951 {
+extension IETF.RFC.`1951` {
 
     static func encodeLZ77(_ input: [Byte], level: Level) -> [LZ77Token] {
         if level == .none || input.isEmpty {

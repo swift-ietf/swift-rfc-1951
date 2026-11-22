@@ -3,9 +3,9 @@ import Testing
 
 @testable import RFC_1951
 
-enum `RFC_1951 Tests` {}
+enum `IETF.RFC.1951 Tests` {}
 
-extension `RFC_1951 Tests` {
+extension `IETF.RFC.1951 Tests` {
     @Suite
     struct `RFC 1951 - DEFLATE Compression` {
 
@@ -15,7 +15,7 @@ extension `RFC_1951 Tests` {
             @Test
             func `Repetitive data achieves good compression`() throws {
                 let input = [Byte](repeating: Byte(0x41), count: 1000)
-                let compressed = RFC_1951.compress(input, level: .best)
+                let compressed = IETF.RFC.`1951`.compress(input, level: .best)
 
                 let ratio = Double(compressed.count) / Double(input.count)
                 #expect(ratio < 0.1, "Expected >90% compression, got \(Int((1 - ratio) * 100))%")
@@ -34,7 +34,7 @@ extension `RFC_1951 Tests` {
                     count: 10
                 )
                 let input = [Byte](utf8: text)
-                let compressed = RFC_1951.compress(input)
+                let compressed = IETF.RFC.`1951`.compress(input)
 
                 #expect(compressed.count < input.count, "Longer text should compress")
             }
@@ -43,7 +43,7 @@ extension `RFC_1951 Tests` {
             func `Streaming API appends to existing buffer`() throws {
                 let input = [Byte](utf8: "Hello")
                 var output: [Byte] = [Byte(0xFF), Byte(0xFE)]
-                RFC_1951.compress(input, into: &output)
+                IETF.RFC.`1951`.compress(input, into: &output)
 
                 #expect(output[0] == Byte(0xFF))
                 #expect(output[1] == Byte(0xFE))
@@ -54,13 +54,13 @@ extension `RFC_1951 Tests` {
             func `Raw DEFLATE API matches regular API`() throws {
                 let input = [Byte](utf8: "Test data")
 
-                let compressed = RFC_1951.compress(input)
-                let compressedRaw = RFC_1951.compressRaw(input)
+                let compressed = IETF.RFC.`1951`.compress(input)
+                let compressedRaw = IETF.RFC.`1951`.compressRaw(input)
 
                 #expect(compressed == compressedRaw)
 
-                let decompressed = try RFC_1951.decompress(compressed)
-                let decompressedRaw = try RFC_1951.decompressRaw(compressedRaw)
+                let decompressed = try IETF.RFC.`1951`.decompress(compressed)
+                let decompressedRaw = try IETF.RFC.`1951`.decompressRaw(compressedRaw)
 
                 #expect(decompressed == decompressedRaw)
                 #expect(decompressed == input)
@@ -70,18 +70,18 @@ extension `RFC_1951 Tests` {
         @Suite
         struct `Edge Case` {
 
-            @Test(.timeLimit(.minutes(1)), arguments: [RFC_1951.Level.fast, .balanced, .best])
-            func `a long run of one byte compresses in linear time and round-trips`(level: RFC_1951.Level) throws {
+            @Test(.timeLimit(.minutes(1)), arguments: [IETF.RFC.`1951`.Level.fast, .balanced, .best])
+            func `a long run of one byte compresses in linear time and round-trips`(level: IETF.RFC.`1951`.Level) throws {
                 let input = [Byte](repeating: Byte(0x2A), count: 4 << 20)
-                let compressed = RFC_1951.compress(input, level: level)
+                let compressed = IETF.RFC.`1951`.compress(input, level: level)
                 #expect(compressed.count < input.count / 100)
-                #expect(try RFC_1951.decompress(compressed) == input)
+                #expect(try IETF.RFC.`1951`.decompress(compressed) == input)
             }
 
             @Test
             func `Back-reference into bytes before the call throws distanceTooFar`() throws {
-                var writer = RFC_1951.BitWriter(into: [Byte]())
-                RFC_1951.encodeFixedHuffmanBlock(
+                var writer = IETF.RFC.`1951`.BitWriter(into: [Byte]())
+                IETF.RFC.`1951`.encodeFixedHuffmanBlock(
                     tokens: [.reference(length: 3, distance: 1)],
                     isFinal: true,
                     into: &writer
@@ -89,8 +89,8 @@ extension `RFC_1951 Tests` {
                 let stream = writer.finish()
                 var output: [Byte] = [Byte(0xAB)]
 
-                #expect(throws: RFC_1951.Error.distanceTooFar) {
-                    try RFC_1951.decompress(stream, into: &output)
+                #expect(throws: IETF.RFC.`1951`.Error.distanceTooFar) {
+                    try IETF.RFC.`1951`.decompress(stream, into: &output)
                 }
                 #expect(output == [Byte(0xAB)])
             }
@@ -98,7 +98,7 @@ extension `RFC_1951 Tests` {
             @Test
             func `Empty data round-trip`() throws {
                 let input: [Byte] = []
-                let compressed = RFC_1951.compress(input)
+                let compressed = IETF.RFC.`1951`.compress(input)
 
                 #expect(!compressed.isEmpty)
 
@@ -112,8 +112,8 @@ extension `RFC_1951 Tests` {
                     input.append(Byte(UInt8(i % 256)))
                 }
 
-                let compressed = RFC_1951.compress(input)
-                let decompressed = try RFC_1951.decompress(compressed)
+                let compressed = IETF.RFC.`1951`.compress(input)
+                let decompressed = try IETF.RFC.`1951`.decompress(compressed)
                 #expect(decompressed == input)
             }
 
@@ -128,8 +128,8 @@ extension `RFC_1951 Tests` {
 
                 input.append(contentsOf: input.prefix(100))
 
-                let compressed = RFC_1951.compress(input)
-                let decompressed = try RFC_1951.decompress(compressed)
+                let compressed = IETF.RFC.`1951`.compress(input)
+                let decompressed = try IETF.RFC.`1951`.decompress(compressed)
                 #expect(decompressed == input)
             }
 
@@ -140,16 +140,16 @@ extension `RFC_1951 Tests` {
                     input.append(Byte(byte))
                 }
 
-                let compressed = RFC_1951.compress(input)
-                let decompressed = try RFC_1951.decompress(compressed)
+                let compressed = IETF.RFC.`1951`.compress(input)
+                let decompressed = try IETF.RFC.`1951`.decompress(compressed)
                 #expect(decompressed == input)
             }
 
             @Test
             func `Empty input throws error on decompression`() {
                 let input: [Byte] = []
-                #expect(throws: RFC_1951.Error.empty) {
-                    _ = try RFC_1951.decompress(input)
+                #expect(throws: IETF.RFC.`1951`.Error.empty) {
+                    _ = try IETF.RFC.`1951`.decompress(input)
                 }
             }
 
@@ -157,8 +157,8 @@ extension `RFC_1951 Tests` {
             func `Invalid block type throws error`() {
 
                 let invalid: [Byte] = [Byte(0b00000110)]
-                #expect(throws: RFC_1951.Error.invalidBlockType(Byte(3))) {
-                    _ = try RFC_1951.decompress(invalid)
+                #expect(throws: IETF.RFC.`1951`.Error.invalidBlockType(Byte(3))) {
+                    _ = try IETF.RFC.`1951`.decompress(invalid)
                 }
             }
         }
@@ -169,24 +169,24 @@ extension `RFC_1951 Tests` {
             @Test
             func `Single byte round-trip`() throws {
                 let input: [Byte] = [Byte(0x42)]
-                let compressed = RFC_1951.compress(input)
-                let decompressed = try RFC_1951.decompress(compressed)
+                let compressed = IETF.RFC.`1951`.compress(input)
+                let decompressed = try IETF.RFC.`1951`.decompress(compressed)
                 #expect(decompressed == input)
             }
 
             @Test
             func `Short text round-trip`() throws {
                 let input = [Byte](utf8: "Hello, World!")
-                let compressed = RFC_1951.compress(input)
-                let decompressed = try RFC_1951.decompress(compressed)
+                let compressed = IETF.RFC.`1951`.compress(input)
+                let decompressed = try IETF.RFC.`1951`.decompress(compressed)
                 #expect(decompressed == input)
             }
 
             @Test
             func `Highly compressible data round-trip`() throws {
                 let input = [Byte](repeating: Byte(0x41), count: 1000)
-                let compressed = RFC_1951.compress(input)
-                let decompressed = try RFC_1951.decompress(compressed)
+                let compressed = IETF.RFC.`1951`.compress(input)
+                let decompressed = try IETF.RFC.`1951`.decompress(compressed)
                 #expect(decompressed == input)
                 #expect(compressed.count < input.count, "Repetitive data should compress well")
             }
@@ -201,31 +201,31 @@ extension `RFC_1951 Tests` {
                     input.append(Byte(value))
                 }
 
-                let compressed = RFC_1951.compress(input)
-                let decompressed = try RFC_1951.decompress(compressed)
+                let compressed = IETF.RFC.`1951`.compress(input)
+                let decompressed = try IETF.RFC.`1951`.decompress(compressed)
                 #expect(decompressed == input)
             }
 
             @Test(
                 arguments: [
-                    RFC_1951.Level.none,
-                    RFC_1951.Level.fast,
-                    RFC_1951.Level.balanced,
-                    RFC_1951.Level.best,
+                    IETF.RFC.`1951`.Level.none,
+                    IETF.RFC.`1951`.Level.fast,
+                    IETF.RFC.`1951`.Level.balanced,
+                    IETF.RFC.`1951`.Level.best,
                 ]
             )
-            func `No compression level produces valid output`(level: RFC_1951.Level) throws {
+            func `No compression level produces valid output`(level: IETF.RFC.`1951`.Level) throws {
                 let input = [Byte](utf8: "The quick brown fox jumps over the lazy dog.")
-                let compressed = RFC_1951.compress(input, level: level)
-                let decompressed = try RFC_1951.decompress(compressed)
+                let compressed = IETF.RFC.`1951`.compress(input, level: level)
+                let decompressed = try IETF.RFC.`1951`.decompress(compressed)
                 #expect(decompressed == input)
             }
 
             @Test
             func `No compression (stored blocks) round-trip`() throws {
                 let input = [Byte](utf8: "This should be stored without compression.")
-                let compressed = RFC_1951.compress(input, level: .none)
-                let decompressed = try RFC_1951.decompress(compressed)
+                let compressed = IETF.RFC.`1951`.compress(input, level: .none)
+                let decompressed = try IETF.RFC.`1951`.decompress(compressed)
                 #expect(decompressed == input)
             }
         }

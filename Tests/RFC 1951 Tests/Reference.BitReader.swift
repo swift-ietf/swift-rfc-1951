@@ -22,7 +22,7 @@ extension Reference.BitReader {
         bitsRemaining > 0 || index < bytes.count
     }
 
-    mutating func readBit() throws(RFC_1951.Error) -> UInt8 {
+    mutating func readBit() throws(IETF.RFC.`1951`.Error) -> UInt8 {
         if bitsRemaining == 0 {
             guard index < bytes.count else {
                 throw .unexpectedEndOfInput
@@ -37,7 +37,7 @@ extension Reference.BitReader {
         return bit
     }
 
-    mutating func readBits(_ count: Int) throws(RFC_1951.Error) -> UInt32 {
+    mutating func readBits(_ count: Int) throws(IETF.RFC.`1951`.Error) -> UInt32 {
         var result: UInt32 = 0
         for i in 0..<count {
             result |= UInt32(try readBit()) << i
@@ -49,7 +49,7 @@ extension Reference.BitReader {
         bitsRemaining = 0
     }
 
-    mutating func readBytes(_ count: Int) throws(RFC_1951.Error) -> [Byte] {
+    mutating func readBytes(_ count: Int) throws(IETF.RFC.`1951`.Error) -> [Byte] {
         alignToByte()
         guard count <= bytes.count - index else {
             throw .unexpectedEndOfInput
@@ -58,7 +58,7 @@ extension Reference.BitReader {
         return Array(bytes[index..<(index + count)])
     }
 
-    mutating func readUInt16LE() throws(RFC_1951.Error) -> UInt16 {
+    mutating func readUInt16LE() throws(IETF.RFC.`1951`.Error) -> UInt16 {
         let pair = try readBytes(2)
         return UInt16(pair[0].underlying) | UInt16(pair[1].underlying) << 8
     }

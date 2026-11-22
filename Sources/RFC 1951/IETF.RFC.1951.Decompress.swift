@@ -1,6 +1,6 @@
 public import Byte
 
-extension RFC_1951 {
+extension IETF.RFC.`1951` {
 
     public static func decompress<Input, Output>(
         _ input: Input,
@@ -53,7 +53,7 @@ extension RFC_1951 {
     }
 }
 
-extension RFC_1951 {
+extension IETF.RFC.`1951` {
 
     public static func decompressRaw<Input, Output>(
         _ input: Input,

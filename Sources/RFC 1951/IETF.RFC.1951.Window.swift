@@ -1,6 +1,6 @@
 internal import Byte
 
-extension RFC_1951 {
+extension IETF.RFC.`1951` {
 
     @safe
     struct Window {
@@ -16,7 +16,7 @@ extension RFC_1951 {
     }
 }
 
-extension RFC_1951.Window {
+extension IETF.RFC.`1951`.Window {
 
     static let slack = 1 << 10
 

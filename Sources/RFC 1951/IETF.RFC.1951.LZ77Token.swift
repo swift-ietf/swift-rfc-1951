@@ -1,6 +1,6 @@
 internal import Byte
 
-extension RFC_1951 {
+extension IETF.RFC.`1951` {
 
     enum LZ77Token {
 

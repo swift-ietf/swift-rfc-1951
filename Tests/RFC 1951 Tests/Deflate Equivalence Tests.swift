@@ -12,10 +12,10 @@ extension `Deflate Equivalence Tests` {
         @Test
         func `length and distance codes match the linear search for every value`() {
             (0...300).forEach { length in
-                #expect(RFC_1951.encodeLengthCode(length) == Reference.lengthCode(length))
+                #expect(IETF.RFC.`1951`.encodeLengthCode(length) == Reference.lengthCode(length))
             }
             (-2...33_000).forEach { distance in
-                #expect(RFC_1951.encodeDistanceCode(distance) == Reference.distanceCode(distance))
+                #expect(IETF.RFC.`1951`.encodeDistanceCode(distance) == Reference.distanceCode(distance))
             }
         }
 
@@ -23,7 +23,7 @@ extension `Deflate Equivalence Tests` {
         func `the bit writer writes what the plain bit writer writes`(seed: Int) {
             var rng = Seeded(UInt64(seed) &+ 40)
             for _ in 0..<200 {
-                var fast = RFC_1951.BitWriter(into: [])
+                var fast = IETF.RFC.`1951`.BitWriter(into: [])
                 var plain = Reference.BitWriter()
                 for _ in 0..<Int.random(in: 0...300, using: &rng) {
                     let value = UInt32.random(in: 0...UInt32.max, using: &rng)
@@ -51,14 +51,14 @@ extension `Deflate Equivalence Tests` {
             }
         }
 
-        @Test(arguments: [RFC_1951.Level.none, .fast, .balanced, .best])
-        func `compress writes the bytes the plain compressor writes`(level: RFC_1951.Level) {
+        @Test(arguments: [IETF.RFC.`1951`.Level.none, .fast, .balanced, .best])
+        func `compress writes the bytes the plain compressor writes`(level: IETF.RFC.`1951`.Level) {
             let inputs = [
                 Corpus.image(150_000), Corpus.runs(150_000), Corpus.random(80_000), Corpus.text(150_000),
                 Corpus.text(7), [], [Byte(0)],
             ]
             for input in inputs {
-                #expect(RFC_1951.compress(input, level: level) == Reference.compress(input, level: level))
+                #expect(IETF.RFC.`1951`.compress(input, level: level) == Reference.compress(input, level: level))
             }
         }
 
@@ -66,7 +66,7 @@ extension `Deflate Equivalence Tests` {
         func `compress into a buffer keeps its bytes and appends the stream`() {
             let input = Corpus.text(5000)
             var output: [Byte] = [Byte(9), Byte(8)]
-            RFC_1951.compress(input, into: &output)
+            IETF.RFC.`1951`.compress(input, into: &output)
             #expect(output == [Byte(9), Byte(8)] + Reference.compress(input, level: .balanced))
         }
     }

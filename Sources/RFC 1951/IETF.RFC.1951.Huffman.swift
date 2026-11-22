@@ -1,6 +1,6 @@
 internal import Byte
 
-extension RFC_1951 {
+extension IETF.RFC.`1951` {
 
     struct HuffmanTree: Sendable {
 
@@ -54,7 +54,7 @@ extension RFC_1951 {
     }
 }
 
-extension RFC_1951.HuffmanTree {
+extension IETF.RFC.`1951`.HuffmanTree {
 
     private static let maxBits = 15
 
@@ -138,11 +138,11 @@ extension RFC_1951.HuffmanTree {
     }
 
     @inline(__always)
-    func decode(from reader: inout RFC_1951.BitReader) throws(RFC_1951.Error) -> UInt32 {
+    func decode(from reader: inout IETF.RFC.`1951`.BitReader) throws(IETF.RFC.`1951`.Error) -> UInt32 {
         guard !isOversubscribed else {
             return payloads[try decodePlain(from: &reader)]
         }
-        return try table.withUnsafeBufferPointer { table throws(RFC_1951.Error) in
+        return try table.withUnsafeBufferPointer { table throws(IETF.RFC.`1951`.Error) in
             try unsafe Self.decode(table, from: &reader)
         }
     }
@@ -150,8 +150,8 @@ extension RFC_1951.HuffmanTree {
     @inline(__always)
     static func decode(
         _ table: UnsafeBufferPointer<UInt32>,
-        from reader: inout RFC_1951.BitReader
-    ) throws(RFC_1951.Error) -> UInt32 {
+        from reader: inout IETF.RFC.`1951`.BitReader
+    ) throws(IETF.RFC.`1951`.Error) -> UInt32 {
         let bits = reader.buffer
         var entry = unsafe table[Int(truncatingIfNeeded: bits) & ((1 << primaryBits) - 1)]
         if entry & link != 0 {
@@ -167,7 +167,7 @@ extension RFC_1951.HuffmanTree {
         return entry
     }
 
-    private func decodePlain(from reader: inout RFC_1951.BitReader) throws(RFC_1951.Error) -> Int {
+    private func decodePlain(from reader: inout IETF.RFC.`1951`.BitReader) throws(IETF.RFC.`1951`.Error) -> Int {
 
         var bits: UInt32 = 0
         var bitsRead = 0
@@ -205,7 +205,7 @@ extension RFC_1951.HuffmanTree {
     }
 }
 
-extension RFC_1951 {
+extension IETF.RFC.`1951` {
 
     static let fixedLiteralLengths: [Int] =
         [Int](repeating: 8, count: 144) + [Int](repeating: 9, count: 112)
@@ -222,7 +222,7 @@ extension RFC_1951 {
     )
 }
 
-extension RFC_1951 {
+extension IETF.RFC.`1951` {
 
     static let kindShift: UInt32 = 25
 
@@ -260,7 +260,7 @@ extension RFC_1951 {
     }
 }
 
-extension RFC_1951 {
+extension IETF.RFC.`1951` {
 
     static let lengthBase: [Int] = [
         3, 4, 5, 6, 7, 8, 9, 10,
@@ -297,7 +297,7 @@ extension RFC_1951 {
     ]
 }
 
-extension RFC_1951 {
+extension IETF.RFC.`1951` {
 
     static let codeLengthOrder: [Int] = [
         16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15,

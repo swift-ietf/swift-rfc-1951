@@ -1,4 +1,4 @@
-extension RFC_1951 {
+extension IETF.RFC.`1951` {
 
     public enum Level: Int, Sendable, Hashable, Codable, CaseIterable {
 

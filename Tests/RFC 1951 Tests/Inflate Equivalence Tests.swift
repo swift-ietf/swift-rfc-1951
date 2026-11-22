@@ -13,8 +13,8 @@ extension `Inflate Equivalence Tests` {
 
         private static func fast<Input: Swift.Collection>(_ input: Input) -> [Byte] where Input.Element == Byte {
             var output = prefix
-            do throws(RFC_1951.Error) {
-                try RFC_1951.decompress(input, into: &output)
+            do throws(IETF.RFC.`1951`.Error) {
+                try IETF.RFC.`1951`.decompress(input, into: &output)
             } catch {
                 output.append(contentsOf: [Byte](utf8: "error: \(error)"))
             }
@@ -23,7 +23,7 @@ extension `Inflate Equivalence Tests` {
 
         private static func plain(_ input: [Byte]) -> [Byte] {
             var output = prefix
-            do throws(RFC_1951.Error) {
+            do throws(IETF.RFC.`1951`.Error) {
                 try Reference.decompress(input, into: &output)
             } catch {
                 output.append(contentsOf: [Byte](utf8: "error: \(error)"))
@@ -39,14 +39,14 @@ extension `Inflate Equivalence Tests` {
             #expect(fast(stream) == expected, "stream of \(stream.count) bytes", sourceLocation: sourceLocation)
         }
 
-        private static var everyCodeTokens: [RFC_1951.LZ77Token] {
+        private static var everyCodeTokens: [IETF.RFC.`1951`.LZ77Token] {
             var rng = Seeded(1951)
-            var tokens: [RFC_1951.LZ77Token] = (0..<33_000).map { _ in .literal(Byte(UInt8.random(in: 0...255, using: &rng))) }
+            var tokens: [IETF.RFC.`1951`.LZ77Token] = (0..<33_000).map { _ in .literal(Byte(UInt8.random(in: 0...255, using: &rng))) }
             (3...258).forEach { length in
                 tokens.append(.reference(length: length, distance: 1 + length % 40))
             }
-            for (code, base) in RFC_1951.distanceBase.enumerated() {
-                let last = base + (1 << RFC_1951.distanceExtraBits[code]) - 1
+            for (code, base) in IETF.RFC.`1951`.distanceBase.enumerated() {
+                let last = base + (1 << IETF.RFC.`1951`.distanceExtraBits[code]) - 1
                 for distance in [base, last] {
                     tokens.append(.reference(length: 3, distance: distance))
                     tokens.append(.reference(length: 258, distance: distance))
@@ -146,9 +146,9 @@ extension `Inflate Equivalence Tests` {
         func `degenerate dynamic trees decode alike`() {
             var rng = Seeded(31)
             let literalOnly = Corpus.tokens(count: 300, referenceShare: 0, using: &rng)
-            let distanceOne: [RFC_1951.LZ77Token] = [.literal(Byte(7))] + (3...258).map { .reference(length: $0, distance: 1) }
+            let distanceOne: [IETF.RFC.`1951`.LZ77Token] = [.literal(Byte(7))] + (3...258).map { .reference(length: $0, distance: 1) }
 
-            func stream(_ tokens: [RFC_1951.LZ77Token], literal: [Int], distance: [Int]) -> [Byte] {
+            func stream(_ tokens: [IETF.RFC.`1951`.LZ77Token], literal: [Int], distance: [Int]) -> [Byte] {
                 var writer = Reference.BitWriter()
                 Corpus.dynamicBlock(
                     tokens,
@@ -218,8 +218,8 @@ extension `Inflate Equivalence Tests` {
             let streams = [
                 Corpus.fixedStream(tokens),
                 dynamic.finish(),
-                RFC_1951.compress(Corpus.text(3000), level: .none),
-                RFC_1951.compress(Corpus.text(3000)),
+                IETF.RFC.`1951`.compress(Corpus.text(3000), level: .none),
+                IETF.RFC.`1951`.compress(Corpus.text(3000)),
             ]
             for stream in streams {
                 for count in 0...stream.count {
@@ -233,8 +233,8 @@ extension `Inflate Equivalence Tests` {
             var rng = Seeded(UInt64(seed) &+ 900)
             let sources = [
                 Corpus.fixedStream(Self.everyCodeTokens.suffix(2000)),
-                RFC_1951.compress(Corpus.text(4000)),
-                RFC_1951.compress(Corpus.random(500)),
+                IETF.RFC.`1951`.compress(Corpus.text(4000)),
+                IETF.RFC.`1951`.compress(Corpus.random(500)),
             ]
             for _ in 0..<300 {
                 var stream = sources.randomElement(using: &rng)!
@@ -263,11 +263,11 @@ extension `Inflate Equivalence Tests` {
             Self.expectSame([])
         }
 
-        @Test(arguments: [RFC_1951.Level.none, .fast, .balanced, .best])
-        func `the package's own deflate round-trips and decodes alike`(level: RFC_1951.Level) throws {
+        @Test(arguments: [IETF.RFC.`1951`.Level.none, .fast, .balanced, .best])
+        func `the package's own deflate round-trips and decodes alike`(level: IETF.RFC.`1951`.Level) throws {
             for input in [Corpus.image(100_000), Corpus.runs(100_000), Corpus.random(70_000), Corpus.text(100_000), []] {
-                let stream = RFC_1951.compress(input, level: level)
-                #expect(try RFC_1951.decompress(stream) == input)
+                let stream = IETF.RFC.`1951`.compress(input, level: level)
+                #expect(try IETF.RFC.`1951`.decompress(stream) == input)
                 Self.expectSame(stream)
             }
         }
@@ -275,10 +275,10 @@ extension `Inflate Equivalence Tests` {
         @Test
         func `sliced and non-contiguous input decode as an array does`() throws {
             let input = Corpus.text(20_000)
-            let stream = RFC_1951.compress(input)
+            let stream = IETF.RFC.`1951`.compress(input)
             let padded = [Byte(1), Byte(2)] + stream
-            #expect(try RFC_1951.decompress(padded.dropFirst(2)) == input)
-            #expect(try RFC_1951.decompress(stream.lazy.map { $0 }) == input)
+            #expect(try IETF.RFC.`1951`.decompress(padded.dropFirst(2)) == input)
+            #expect(try IETF.RFC.`1951`.decompress(stream.lazy.map { $0 }) == input)
             #expect(Self.fast(stream.lazy.map { $0 }.dropLast(5)) == Self.plain(Array(stream.dropLast(5))))
         }
     }

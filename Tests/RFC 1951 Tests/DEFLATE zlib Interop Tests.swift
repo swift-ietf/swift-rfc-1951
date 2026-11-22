@@ -18,7 +18,7 @@ extension `DEFLATE zlib Interop Tests` {
         @Test
         func `a zlib fixed-Huffman stream decodes`() throws {
             let stream = Self.bytes([0xCB, 0x48, 0xCD, 0xC9, 0xC9, 0x57, 0xC8, 0x40, 0x90, 0x00])
-            #expect(try RFC_1951.decompressRaw(stream) == Self.bytes(Array("hello hello hello".utf8)))
+            #expect(try IETF.RFC.`1951`.decompressRaw(stream) == Self.bytes(Array("hello hello hello".utf8)))
         }
 
         private static let letters: [UInt8] = {
@@ -153,7 +153,7 @@ extension `DEFLATE zlib Interop Tests` {
                 0x94, 0x10, 0x81, 0xBE, 0xFC, 0x63, 0x79, 0xFE, 0x25, 0xB7, 0xF3, 0xAE, 0x38, 0xB3, 0x2A, 0xD8, 0x9E, 0x74, 0xC8, 0xB1, 0x97, 0xDA, 0x32, 0xA9, 0x02, 0x25, 0x8D, 0xFA, 0x07,
             ])
             #expect((dynamic[0].underlying >> 1) & 3 == 2)
-            #expect(try RFC_1951.decompressRaw(dynamic) == Self.bytes(Self.letters))
+            #expect(try IETF.RFC.`1951`.decompressRaw(dynamic) == Self.bytes(Self.letters))
         }
 
         @Test
@@ -183,13 +183,13 @@ extension `DEFLATE zlib Interop Tests` {
                 0x24,
                 0xE6, 0xA6, 0x96, 0x28, 0x8C, 0x4A, 0x8D, 0x70, 0x29, 0x00,
             ])
-            #expect(try RFC_1951.decompressRaw(stream) == Self.bytes(Self.text))
+            #expect(try IETF.RFC.`1951`.decompressRaw(stream) == Self.bytes(Self.text))
         }
 
         @Test
         func `a zlib stored stream decodes`() throws {
             let stream = Self.bytes([0x01, 0x07, 0x00, 0xF8, 0xFF, 0x73, 0x74, 0x6F, 0x72, 0x65, 0x64, 0x21])
-            #expect(try RFC_1951.decompressRaw(stream) == Self.bytes(Array("stored!".utf8)))
+            #expect(try IETF.RFC.`1951`.decompressRaw(stream) == Self.bytes(Array("stored!".utf8)))
         }
 
         @Test
@@ -219,7 +219,7 @@ extension `DEFLATE zlib Interop Tests` {
                 0x24,
                 0xE6, 0xA6, 0x96, 0x28, 0x8C, 0x4A, 0x8D, 0x70, 0x29, 0x00,
             ])
-            #expect(throws: RFC_1951.Error.self) { try RFC_1951.decompressRaw(stream.dropLast(3)) }
+            #expect(throws: IETF.RFC.`1951`.Error.self) { try IETF.RFC.`1951`.decompressRaw(stream.dropLast(3)) }
         }
     }
 }

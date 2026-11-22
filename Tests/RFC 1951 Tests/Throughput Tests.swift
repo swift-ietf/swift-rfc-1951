@@ -30,9 +30,9 @@ extension `Throughput Tests` {
             default: input = Corpus.text(count)
             }
             var stream: [Byte] = []
-            let deflate = Self.seconds { stream = RFC_1951.compress(input) }
+            let deflate = Self.seconds { stream = IETF.RFC.`1951`.compress(input) }
             var output: [Byte] = []
-            let inflate = try Self.seconds { output = try RFC_1951.decompress(stream) }
+            let inflate = try Self.seconds { output = try IETF.RFC.`1951`.decompress(stream) }
             #expect(output == input)
             let megabytes = Double(count) / 1e6
             print(

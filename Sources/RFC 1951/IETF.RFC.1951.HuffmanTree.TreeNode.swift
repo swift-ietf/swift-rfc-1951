@@ -1,4 +1,4 @@
-extension RFC_1951.HuffmanTree {
+extension IETF.RFC.`1951`.HuffmanTree {
     struct TreeNode: Sendable {
         var children: (left: Int, right: Int)
         var isLeaf: Bool

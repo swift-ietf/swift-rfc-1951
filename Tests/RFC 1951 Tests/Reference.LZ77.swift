@@ -59,7 +59,7 @@ extension Reference.LZ77 {
         head[h] = position
     }
 
-    static func tokens(_ input: [Byte], level: RFC_1951.Level) -> [RFC_1951.LZ77Token] {
+    static func tokens(_ input: [Byte], level: IETF.RFC.`1951`.Level) -> [IETF.RFC.`1951`.LZ77Token] {
         if level == .none || input.isEmpty {
             return input.map { .literal($0) }
         }
@@ -71,7 +71,7 @@ extension Reference.LZ77 {
         case .best: (lazy, maxChain) = (258, 4096)
         }
         var lz77 = Reference.LZ77()
-        var tokens: [RFC_1951.LZ77Token] = []
+        var tokens: [IETF.RFC.`1951`.LZ77Token] = []
         var position = 0
         while position < input.count {
             if let match = lz77.findMatch(in: input, at: position, maxLazyMatch: lazy, maxChain: maxChain) {

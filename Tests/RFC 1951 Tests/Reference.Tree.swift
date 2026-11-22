@@ -46,7 +46,7 @@ extension Reference.Tree {
         return result
     }
 
-    func decode(from reader: inout Reference.BitReader) throws(RFC_1951.Error) -> Int {
+    func decode(from reader: inout Reference.BitReader) throws(IETF.RFC.`1951`.Error) -> Int {
         var bits = 0
         var bitsRead = 0
         while bitsRead < 9 && reader.hasMoreBits {

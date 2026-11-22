@@ -1,6 +1,6 @@
 internal import Byte
 
-extension RFC_1951 {
+extension IETF.RFC.`1951` {
 
     enum BlockType: UInt8 {
 
@@ -16,7 +16,7 @@ extension RFC_1951 {
     static let maxStoredBlockSize = 65535
 }
 
-extension RFC_1951 {
+extension IETF.RFC.`1951` {
 
     static func encodeStoredBlock(
         data: ArraySlice<Byte>,
@@ -154,7 +154,7 @@ extension RFC_1951 {
         }
 }
 
-extension RFC_1951 {
+extension IETF.RFC.`1951` {
 
     static func decodeBlock(
         from reader: inout BitReader,

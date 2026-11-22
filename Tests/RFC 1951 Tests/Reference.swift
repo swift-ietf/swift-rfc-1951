@@ -6,7 +6,7 @@ enum Reference {}
 
 extension Reference {
 
-    static func decompress(_ input: [Byte], into output: inout [Byte]) throws(RFC_1951.Error) {
+    static func decompress(_ input: [Byte], into output: inout [Byte]) throws(IETF.RFC.`1951`.Error) {
         guard !input.isEmpty else {
             throw .empty
         }
@@ -22,7 +22,7 @@ extension Reference {
         from reader: inout BitReader,
         into output: inout [Byte],
         origin: Int
-    ) throws(RFC_1951.Error) -> Bool {
+    ) throws(IETF.RFC.`1951`.Error) -> Bool {
         let isFinal = try reader.readBit() == 1
         let btype = try reader.readBits(2)
         switch btype {
@@ -38,7 +38,7 @@ extension Reference {
         case 1:
             try decodeHuffmanBlock(
                 from: &reader,
-                literalTree: Tree(lengths: RFC_1951.fixedLiteralLengths),
+                literalTree: Tree(lengths: IETF.RFC.`1951`.fixedLiteralLengths),
                 distanceTree: Tree(lengths: [Int](repeating: 5, count: 32)),
                 into: &output,
                 origin: origin
@@ -66,7 +66,7 @@ extension Reference {
         distanceTree: Tree,
         into output: inout [Byte],
         origin: Int
-    ) throws(RFC_1951.Error) {
+    ) throws(IETF.RFC.`1951`.Error) {
         while true {
             let symbol = try literalTree.decode(from: &reader)
             if symbol < 256 {
@@ -75,19 +75,19 @@ extension Reference {
                 return
             } else {
                 let index = symbol - 257
-                guard index < RFC_1951.lengthBase.count else {
+                guard index < IETF.RFC.`1951`.lengthBase.count else {
                     throw .invalidLengthCode(symbol)
                 }
                 let length =
-                    RFC_1951.lengthBase[index]
-                    + Int(try reader.readBits(RFC_1951.lengthExtraBits[index]))
+                    IETF.RFC.`1951`.lengthBase[index]
+                    + Int(try reader.readBits(IETF.RFC.`1951`.lengthExtraBits[index]))
                 let code = try distanceTree.decode(from: &reader)
-                guard code < RFC_1951.distanceBase.count else {
+                guard code < IETF.RFC.`1951`.distanceBase.count else {
                     throw .invalidDistanceCode(code)
                 }
                 let distance =
-                    RFC_1951.distanceBase[code]
-                    + Int(try reader.readBits(RFC_1951.distanceExtraBits[code]))
+                    IETF.RFC.`1951`.distanceBase[code]
+                    + Int(try reader.readBits(IETF.RFC.`1951`.distanceExtraBits[code]))
                 guard distance <= output.count - origin else {
                     throw .distanceTooFar
                 }
@@ -101,14 +101,14 @@ extension Reference {
 
     private static func readDynamicTrees(
         from reader: inout BitReader
-    ) throws(RFC_1951.Error) -> (Tree, Tree) {
+    ) throws(IETF.RFC.`1951`.Error) -> (Tree, Tree) {
         let hlit = Int(try reader.readBits(5)) + 257
         let hdist = Int(try reader.readBits(5)) + 1
         let hclen = Int(try reader.readBits(4)) + 4
 
         var codeLengthLengths = [Int](repeating: 0, count: 19)
         for i in 0..<hclen {
-            codeLengthLengths[RFC_1951.codeLengthOrder[i]] = Int(try reader.readBits(3))
+            codeLengthLengths[IETF.RFC.`1951`.codeLengthOrder[i]] = Int(try reader.readBits(3))
         }
         let codeLengthTree = Tree(lengths: codeLengthLengths)
 
