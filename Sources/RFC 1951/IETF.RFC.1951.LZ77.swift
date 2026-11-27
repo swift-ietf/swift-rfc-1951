@@ -27,9 +27,10 @@ extension IETF.RFC.`1951`.LZ77 {
     @inline(__always)
     private static func hash(of bytes: UnsafeRawBufferPointer, at position: Int) -> Int {
         let packed =
-            Int(unsafe bytes[position]) | (Int(unsafe bytes[position + 1]) << 8)
-            | (Int(unsafe bytes[position + 2]) << 16)
-        return ((packed &* 2_654_435_761) >> 9) & (hashSize - 1)
+            UInt64(unsafe bytes[position]) | (UInt64(unsafe bytes[position + 1]) << 8)
+            | (UInt64(unsafe bytes[position + 2]) << 16)
+        // WHY: In 64 bits, so that the hash, and so the compressed bytes, are the same where `Int` has 32.
+        return Int(truncatingIfNeeded: (packed &* 2_654_435_761) >> 9) & (hashSize - 1)
     }
 
     @inline(__always)
